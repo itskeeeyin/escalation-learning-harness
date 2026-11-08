@@ -1,0 +1,178 @@
+const app = document.querySelector("#app");
+const notice = document.querySelector("#notice");
+const dialog = document.querySelector("#source-dialog");
+const stages = ["Engage", "Coordinate", "Learn", "Verify", "Closed"];
+let view;
+let pending = false;
+
+const escape = (value) => String(value).replace(/[&<>"']/g, char => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+})[char]);
+
+const button = (command, label, primary = false, id = "") =>
+  `<button type="button" data-command="${command}" data-id="${id}" class="${primary ? "primary" : ""}">${label}</button>`;
+
+const sources = (ids) => ids.length ? `<div class="chips" aria-label="Evidence references">${ids.map(id =>
+  `<button type="button" class="chip" data-source="${escape(id)}" aria-label="Read evidence ${escape(id)}">${escape(id)}</button>`
+).join("")}</div>` : "";
+
+function engagement() {
+  const t = view.triage;
+  if (view.recovered) {
+    return `<details class="panel"><summary><strong>Customer recovery confirmed</strong></summary>
+      <p>Support validated the rebuilt template and the customer accepted the outcome.</p>${sources(["R1", "R2"])}
+      <blockquote>${escape(t.preview)}</blockquote></details>`;
+  }
+  const currentDraft = t.draft;
+  const invalid = currentDraft.validation.find(check => !check.approval_allowed);
+  return `<section class="panel" aria-labelledby="recovery-heading">
+    <div class="label">${escape(view.case_id)} / ${escape(view.customer)}</div>
+    <h2 id="recovery-heading">${escape(t.case.symptom)}</h2>
+    <p>${t.confirmed ? "Telemetry confirms a draft discard. Rebuild from the requirements worksheet and validate routing." :
+      "The administrator’s report is the starting point. Confirm the event and rollout impact before assigning priority."}</p>
+    ${sources(t.confirmed ? ["E1", "E2", "E3", "KB1-F1", "KB1-F2"] : ["E1", "KB2-F1", "KB2-F2", "KB2-F3"])}
+    ${!t.confirmed ? `<div class="controls">${button("reveal", "Run triage agent", true)}</div>` : `
+      <div class="note sub"><strong>Rebuild owner</strong> · ${escape(t.follow_up.owner)} with Support validation.
+      <br><strong>Open scope question</strong> · Impact on previously launched assessments.</div>
+      <h3>Customer update · v${currentDraft.version}</h3>
+      <p>${escape(currentDraft.claims.map(claim => claim.text).join(" "))}</p>
+      <p class="sub">${escape(currentDraft.commitment.text)}</p>
+      ${invalid ? `<div class="warning" role="alert">Approval blocked · ${escape(invalid.failure_code.replaceAll("_", " ").toLowerCase())}.${sources(invalid.supporting_citation_ids || [])}</div>` : ""}
+      ${t.preview ? `<p class="success sub">Approved customer preview · v${currentDraft.version}</p>` :
+        `<p class="note sub">Customer preview locked · ${t.priority_confirmed ? "awaiting draft approval" : "awaiting priority confirmation"}</p>`}
+      <div class="controls">
+        ${!t.priority_confirmed ? button("confirm_priority", "Confirm P2", true) : ""}
+        ${!invalid && t.priority_confirmed && !t.preview ? button("approve", "Approve customer draft", true) : ""}
+        ${invalid ? button("original", "Restore supported wording", true) :
+          button("inject_restore", "Try unsupported restore claim") + (t.preview ? button("revise", "Revise wording") : "")}
+        ${t.preview && !view.resolution_available ? button("load_resolution", "Replay recovery evidence", true) : ""}
+      </div>
+      ${view.resolution_available ? `<div class="note"><h3>Recovery evidence</h3>
+        <p class="sub">Support validated 18 questions and both routing paths. The customer accepted the outcome.</p>${sources(["R1", "R2"])}
+        ${t.preview ? `<div class="controls">${button("confirm_recovery", "Confirm customer recovery", true)}</div>` : ""}</div>` : ""}
+    `}
+  </section>`;
+}
+
+function actionCard(action) {
+  const executiveWaiting = action.id === "EXEC" && view.actions.some(row => row.id !== "EXEC" && row.state !== "Verified");
+  return `<article class="action">
+    <div class="row"><span class="label">${escape(action.team)}</span><span class="status ${action.state !== "Verified" ? "pending" : ""}">${escape(action.state)}</span></div>
+    <h3>${escape(action.title)}</h3>
+    <p><strong>${escape(action.kind)}</strong> · ${escape(action.owner)} · Due ${escape(action.due)}</p>
+    <p><strong>Acceptance</strong> · ${escape(action.criterion)}</p>
+    ${sources(action.sources)}
+    ${action.proof ? `<p class="proof"><strong>Simulated evidence</strong> · ${escape(action.proof)}</p>` : ""}
+    ${view.proof_available && action.state === "Assigned" ? `<div class="controls">${executiveWaiting ?
+      '<span class="sub muted">Waiting for team verification</span>' :
+      button("verify", `Verify ${escape(action.team)}`, false, escape(action.id))}</div>` : ""}
+  </article>`;
+}
+
+function learning() {
+  if (!view.recovered) return "";
+  const havePlan = view.actions.length > 0;
+  const outstanding = view.actions.filter(row => row.state !== "Verified").length;
+  return `<section class="panel" aria-labelledby="learning-heading">
+    <div class="label">CROSS-FUNCTIONAL FOLLOW-UP</div><h2 id="learning-heading">Turn the incident into improvements</h2>
+    ${!havePlan ? `<p>Review the cause, look for earlier cases with the same mechanism, and route the findings to accountable owners.</p>
+      <div class="controls">${button("learn", "Run learning agents", true)}</div>` : `
+      <p><strong>Confirmed cause</strong> · The draft was discarded. <strong>Contributing factor</strong> · The prompt omitted the draft name and the permanent loss of configuration in a test copy.</p>
+      ${sources(["E2", "R3"])}
+      <details class="note" open><summary><strong>${view.history.filter(row => row.match).length} prior matches</strong> · confirmed discard in template authoring</summary>
+        <ul class="clean">${view.history.map(row => `<li><strong>${escape(row.id)}</strong> · ${row.match ? "Same mechanism" : "Excluded · similar symptom, mechanism unconfirmed"}${sources([row.source])}</li>`).join("")}</ul>
+      </details>
+      <div class="actions">${view.actions.map(actionCard).join("")}</div>
+      <div class="controls">
+        ${view.stage === "Learn" ? button("approve_plan", "Approve follow-up plan", true) : ""}
+        ${view.stage === "Verify" && !view.proof_available ? button("load_proof", "Replay completion evidence", true) : ""}
+        ${view.stage === "Verify" && !outstanding ? button("close", "Close learning loop", true) : ""}
+        ${view.stage === "Verify" && outstanding ? `<span class="sub muted">Closure locked · ${outstanding} actions await verification</span>` : ""}
+      </div>
+      ${view.stage === "Closed" ? `<p class="success">Learning closed · owners verified all ${view.actions.length} actions. ${escape(view.learning_review.owner)} will review recurrence in ${view.learning_review.interval_days} days.</p>` : ""}
+    `}
+  </section>`;
+}
+
+function executive() {
+  const brief = view.executive;
+  return `<section class="panel brief"><div class="label">STAKEHOLDER BRIEF · INTERNAL DRAFT</div><h2>Executive update</h2>
+    <p><strong>${escape(brief.priority)}</strong> · ${escape(brief.status)}</p>
+    <p class="sub"><strong>Decision</strong> · ${escape(brief.decision)}</p>
+    <p class="sub"><strong>Next checkpoint</strong> · ${escape(brief.next)}</p>
+    ${sources(brief.sources)}</section>`;
+}
+
+function audit() {
+  return `<section class="panel"><div class="header-row"><div><div class="label">DECISION HISTORY</div><h2>Agent & reviewer trace</h2></div>
+    ${button("export", "Export JSON")}</div>
+    ${view.audit.length ? `<ol class="clean">${[...view.audit].reverse().map(event => `<li class="event">
+      <span class="step-id">${String(event.step).padStart(2, "0")}</span><div><strong>${escape(event.actor)}</strong>
+      <p>${escape(event.summary)}</p>${sources(event.sources)}</div></li>`).join("")}</ol>` :
+      '<p class="sub">Evidence reads, proposals, approvals, and verification decisions will appear here.</p>'}
+  </section>`;
+}
+
+function render() {
+  const index = stages.indexOf(view.stage);
+  const verified = view.actions.filter(row => row.state === "Verified").length;
+  app.innerHTML = `<ol class="steps" aria-label="Escalation lifecycle">${stages.map((stage, i) => `<li class="${i === index ? "current" : i < index ? "past" : ""}" ${i === index ? 'aria-current="step"' : ""}><b>${i + 1}.</b> ${stage}</li>`).join("")}</ol>
+    <div class="metrics"><div class="metric"><span class="label">CUSTOMER</span><strong>${view.recovered ? "Recovered" : "Open escalation"}</strong></div>
+    <div class="metric"><span class="label">LEARNING</span><strong>${view.stage === "Closed" ? "Closed" : "Open"}</strong></div>
+    <div class="metric"><span class="label">VERIFIED ACTIONS</span><strong>${verified} / ${view.actions.length || "—"}</strong></div></div>
+    <div class="layout"><div class="stack" id="workflow">${engagement()}${learning()}</div>
+    <aside class="stack">${executive()}${audit()}<div>${button("reset", "Restart practice case")}</div></aside></div>`;
+  app.setAttribute("aria-busy", "false");
+}
+
+async function request(command, id) {
+  if (pending) return;
+  pending = true;
+  const method = command ? "POST" : "GET";
+  app.setAttribute("aria-busy", "true");
+  try {
+    const response = await fetch("/api/session", command ? {
+      method, headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({action: command, revision: view.revision, action_id: id || null})
+    } : {method});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "The workflow request failed.");
+    view = data;
+    render();
+    if (command) {
+      const next = app.querySelector("#workflow button.primary, #workflow button[data-command=verify]");
+      next?.focus({preventScroll: true});
+      notice.textContent = view.audit.at(-1)?.summary || "Practice case restarted.";
+    }
+  } catch (error) {
+    notice.textContent = error.message;
+  } finally {
+    app.setAttribute("aria-busy", "false");
+    pending = false;
+  }
+}
+
+app.addEventListener("click", event => {
+  const target = event.target.closest("button");
+  if (!target) return;
+  const {source, command, id} = target.dataset;
+  if (source) {
+    const [title, observation, url] = view.evidence[source];
+    document.querySelector("#source-content").innerHTML = `<div class="label">EVIDENCE / ${escape(source)}</div>
+      <h2>${escape(title)}</h2><p>${escape(observation)}</p>
+      ${url ? `<p><a href="${escape(url)}" target="_blank" rel="noopener noreferrer">Open source documentation</a></p>` : ""}`;
+    dialog.showModal();
+  } else if (command === "export") {
+    const file = new Blob([JSON.stringify(view, null, 2)], {type: "application/json"});
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${view.case_id}-learning-record.json`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } else if (command) {
+    request(command, id);
+  }
+});
+
+request();

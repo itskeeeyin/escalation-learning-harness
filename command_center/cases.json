@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "dataset_id": "onetrust-assessment-template-escalation",
+  "description": "Interview practice dataset. Product guidance is paraphrased from public OneTrust documentation. Public community reports are anecdotal and used as scenario inspiration. All case records, organizations, events, severity rules, drafts and decisions are fictional.",
+  "source_retrieval": {
+    "method": "Public search-indexed article text",
+    "access_note": "Direct fetches of the two MyOneTrust articles returned cache misses. Their guidance comes from the publicly indexed article bodies. Community sources are public Reddit discussions. No MyOneTrust community posts were verified."
+  },
+  "knowledge_base": [
+    {
+      "id": "KB1",
+      "kind": "public_product_documentation",
+      "title": "Assessment Templates Cannot Be Recovered After Being Discarded",
+      "url": "https://my.onetrust.com/s/article/Assessment-Templates-Cannot-Be-Recovered-After-Being-Discarded?language=en_US",
+      "article_date": "2026-10-26",
+      "section": "Template Recovery",
+      "facts": [
+        {
+          "id": "KB1-F1",
+          "paraphrase": "Once a draft assessment template is discarded, OneTrust provides no supported way to restore the draft or its configuration."
+        },
+        {
+          "id": "KB1-F2",
+          "paraphrase": "To continue after an accidental discard, create a new assessment template and configure it again."
+        }
+      ]
+    },
+    {
+      "id": "KB2",
+      "kind": "public_product_documentation",
+      "title": "Cannot find a particular Assessment Template when launching assessments",
+      "url": "https://my.onetrust.com/s/article/How-to-Find-a-Specific-Assessment-Template?language=en_US",
+      "article_date": "2025-02-28",
+      "section": "Resolution",
+      "facts": [
+        {
+          "id": "KB2-F1",
+          "paraphrase": "When launching an assessment, search using the exact template name and verify that the selected record type matches."
+        },
+        {
+          "id": "KB2-F2",
+          "paraphrase": "When launching from Active Assessments, verify that the template belongs to the same solution."
+        },
+        {
+          "id": "KB2-F3",
+          "paraphrase": "In the gallery, verify the exact name and the solution where the template was created, then check archived templates if it still does not appear."
+        }
+      ]
+    },
+    {
+      "id": "KB3",
+      "kind": "public_product_documentation",
+      "title": "Managing Skip or Show Logic Conditions",
+      "url": "https://docs.onetrust.com/en/third-party-management/third-party-risk-management/creating-and-managing-vendor-templates/managing-skip-or-show-logic-conditions",
+      "section": "To configure skip or show logic settings",
+      "facts": [
+        {
+          "id": "KB3-F1",
+          "paraphrase": "In vendor templates, Show logic can display questions according to earlier answers. Skip logic can jump to a later question and hide the intervening questions."
+        }
+      ]
+    }
+  ],
+  "demo_rubric": {
+    "id": "DEMO-RUBRIC-1",
+    "kind": "synthetic_policy",
+    "rules": [
+      {
+        "code": "P2",
+        "when": "One customer rollout is blocked within 24 hours and a rebuild path is available."
+      },
+      {
+        "code": "NEEDS_IMPACT_CHECK",
+        "when": "Impact or deadline is unverified. Ask for scope and timing before recommending a severity."
+      }
+    ],
+    "severity_owner": "Escalation manager"
+  },
+  "incidents": [
+    {
+      "incident_id": "ESC-1042",
+      "kind": "synthetic_incident",
+      "customer": "Example Privacy Team",
+      "template_name": "Regional DPIA Rollout",
+      "template_id": "TPL-DEMO-1042",
+      "symptom": "A draft DPIA assessment template is missing.",
+      "impact": "One scheduled customer rollout is blocked. Impact on launched assessments is unknown.",
+      "timeline": [
+        "2026-11-04T16:55:00Z | Administrator reports the missing draft.",
+        "2026-11-04T17:10:00Z | Support checks a simulated event record for the draft.",
+        "2026-11-04T17:20:00Z | Customer confirms rollout timing and availability of a requirements worksheet."
+      ],
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "synthetic_ticket",
+          "source": "Fictional support ticket ESC-1042",
+          "timestamp": "2026-11-04T16:55:00Z",
+          "observation": "The administrator reports selecting Discard and confirming the prompt while working on Regional DPIA Rollout."
+        },
+        {
+          "id": "E2",
+          "kind": "synthetic_event_record",
+          "source": "Simulated case telemetry",
+          "timestamp": "2026-11-04T17:10:00Z",
+          "observation": "Support verifies a simulated discard event at 2026-11-04T16:52:00Z for draft TPL-DEMO-1042. The event applies only to the draft."
+        },
+        {
+          "id": "E3",
+          "kind": "synthetic_rollout_plan",
+          "source": "Fictional customer rollout plan",
+          "timestamp": "2026-11-04T17:20:00Z",
+          "observation": "The customer confirms one rollout is blocked, with launch planned for 2026-11-05T17:00:00Z. A requirements worksheet is available to rebuild the template."
+        }
+      ],
+      "unknowns": [
+        "Impact on launched assessments",
+        "Time required to rebuild and validate"
+      ],
+      "follow_up": {
+        "owner": "Customer template owner",
+        "action": "Rebuild from the requirements worksheet and have Support validate questions and routing."
+      },
+      "preventive_follow_up": {
+        "owner": "Customer template owner",
+        "action": "Review draft-discard guidance with template editors before the next rollout."
+      },
+      "rollout": {
+        "launch_at": "2026-11-05T17:00:00Z",
+        "blocked_rollouts": 1,
+        "worksheet_available": true
+      }
+    },
+    {
+      "incident_id": "ESC-1043",
+      "kind": "synthetic_incident",
+      "customer": "Example Risk Team",
+      "template_name": "Vendor Risk Intake",
+      "symptom": "A user cannot find a template from Active Assessments.",
+      "impact": "Rollout scope and deadline are unverified.",
+      "timeline": [
+        "2026-11-04T18:30:00Z | User reports the template is missing from the launch picker."
+      ],
+      "evidence": [
+        {
+          "id": "E4",
+          "kind": "synthetic_ticket",
+          "source": "Fictional support ticket ESC-1043",
+          "timestamp": "2026-11-04T18:30:00Z",
+          "observation": "The user searches for Vendor Risk Intake from Active Assessments. The exact configured name, selected record type, and solution are unverified. No discard evidence was supplied."
+        }
+      ],
+      "unknowns": [
+        "Whether a discard occurred",
+        "Exact configured name",
+        "Selected record type and solution",
+        "Customer impact and deadline"
+      ]
+    },
+    {
+      "incident_id": "ESC-1044",
+      "kind": "synthetic_incident",
+      "inspiration_ids": [
+        "COMM1",
+        "COMM2"
+      ],
+      "customer": "Example Vendor Assurance Team",
+      "template_name": "Supplier Security Review",
+      "template_id": "TPL-DEMO-1044",
+      "symptom": "A vendor cannot submit a launched assessment because the validation message points to a required field they cannot see.",
+      "impact": "One test assessment is affected. Wider impact and production deadline are unverified.",
+      "timeline": [
+        "2026-11-05T18:15:00Z | Respondent reports the submit error.",
+        "2026-11-05T18:40:00Z | Support reproduces the symptom on a test copy with one answer path."
+      ],
+      "evidence": [
+        {
+          "id": "E5",
+          "kind": "synthetic_ticket",
+          "source": "Fictional vendor support ticket",
+          "timestamp": "2026-11-05T18:15:00Z",
+          "observation": "The respondent reports a required-field error for Q12. Q12 is absent from the rendered questionnaire."
+        },
+        {
+          "id": "E6",
+          "kind": "synthetic_reproduction",
+          "source": "Fictional Support test notes",
+          "timestamp": "2026-11-05T18:40:00Z",
+          "observation": "On test copy v3, Q12 is absent and submission fails after answering No to Q7. With Yes to Q7, Q12 is visible and the completed test submits."
+        }
+      ],
+      "unknowns": [
+        "Why the No path still produces a required-field error",
+        "Whether other templates, versions or respondents are affected",
+        "Customer deadline"
+      ],
+      "follow_up": {
+        "owner": "Support with the customer template owner",
+        "action": "Inspect the Q7-to-Q12 conditions on v3, repeat both paths in a test copy, and verify scope before proposing a change."
+      },
+      "preventive_follow_up": {
+        "owner": "Customer template owner",
+        "action": "Add submission checks for each conditional answer path before publishing template changes."
+      }
+    }
+  ],
+  "customer_draft_fixture": {
+    "kind": "synthetic_draft",
+    "id": "DRAFT-1042",
+    "version": 1,
+    "incident_id": "ESC-1042",
+    "claims": [
+      {
+        "id": "C1",
+        "text": "We confirmed that the draft assessment template was discarded.",
+        "citation_ids": [
+          "E2"
+        ]
+      },
+      {
+        "id": "C2",
+        "text": "We understand this puts tomorrow’s rollout at risk.",
+        "citation_ids": [
+          "E3"
+        ]
+      },
+      {
+        "id": "C3",
+        "text": "The supported path is to create and configure a new template.",
+        "citation_ids": [
+          "KB1-F2"
+        ]
+      }
+    ],
+    "proposed_commitment": {
+      "text": "We’ll use your requirements worksheet as the starting point and update you by 2 p.m. Pacific with rebuild progress and remaining risks.",
+      "supporting_context_ids": [
+        "E3"
+      ],
+      "requires_reviewer_confirmation": true
+    },
+    "draft_state": "pending_review",
+    "customer_ready_preview": false
+  },
+  "community_signals": [
+    {
+      "id": "COMM1",
+      "kind": "public_community_anecdote",
+      "title": "Onetrust Third Party Risk Management",
+      "url": "https://www.reddit.com/r/cybersecurity/comments/1gfefay/",
+      "retrieval": "public search-indexed post excerpt",
+      "paraphrase": "A poster reported that required questions were missing from a launched third-party risk assessment and that submission was blocked.",
+      "use": "scenario_inspiration_only",
+      "verification": "Unverified account. The cause and resolution are unknown."
+    },
+    {
+      "id": "COMM2",
+      "kind": "public_community_anecdote",
+      "title": "RANT- Conditional Formatting on due diligence questionnaires",
+      "url": "https://www.reddit.com/r/grc/comments/1mtspnb/rant_conditional_formatting_on_due_diligence/",
+      "retrieval": "public post",
+      "paraphrase": "A respondent described how branching questions increased the effort needed to complete a due diligence questionnaire and mentioned online platforms such as OneTrust.",
+      "use": "scenario_inspiration_only",
+      "verification": "Anecdote about respondent effort. It establishes no OneTrust-specific defect."
+    }
+  ]
+}
