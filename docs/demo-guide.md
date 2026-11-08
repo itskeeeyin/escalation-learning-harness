@@ -2,7 +2,7 @@
 
 ## 1. Establish impact
 
-Run `python3 serve.py` and open [the local demo](http://127.0.0.1:8796). Start at **Engage** and read E1. Run triage, then open E2 and E3. Show that telemetry identifies a draft discard and that one rollout is at risk. Confirm P2. The executive brief shows the next checkpoint and links to the evidence.
+Open the [live browser demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/). For the local Python version, run `python3 serve.py` and visit [localhost](http://127.0.0.1:8796). Start at **Engage** and read E1. Run triage, then open E2 and E3. Show that telemetry identifies a draft discard and that one rollout is at risk. Confirm P2. The executive brief shows the next checkpoint and links to the evidence.
 
 ## 2. Show how the draft guard works
 

@@ -6,11 +6,11 @@ A runnable demo that follows a critical customer escalation from the first repor
 
 ![Escalation learning loop with evidence inputs, reviewer decisions, verified outputs, and a proposed production feedback loop](docs/images/learning-loop.svg)
 
-The demo replays one fictional assessment-template incident. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. No account, API key, or third-party package is needed.
+The demo replays one fictional assessment-template incident. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
 
-## Run the demo
+## Run the Python version locally
 
-Use Python 3.11 or newer.
+The local version requires Python 3.11 or newer and uses the standard library.
 
 ```sh
 git clone https://github.com/itskeeeyin/escalation-learning-harness.git
@@ -28,7 +28,7 @@ Open [the local demo](http://127.0.0.1:8796). If the port is in use, run `python
 4. **Learn.** Run the RCA, recurrence, and routing stages. Two prior confirmed discard cases match. A similar launch-picker report is excluded because its mechanism is unverified.
 5. **Verify.** Approve the follow-up plan and review simulated completion evidence. Verify each action, then record executive sign-off and close learning. **Export JSON** saves the decision record.
 
-[Open the demo screenshot](docs/images/demo-preview.png) · [Read the rehearsal guide](docs/demo-guide.md)
+[Open a screenshot of the live demo](docs/images/demo-preview.png) · [Read the rehearsal guide](docs/demo-guide.md)
 
 ## What each team owns
 
@@ -46,7 +46,7 @@ The escalation manager owns the case, confirms priority and recovery, approves t
 
 ## Benefits and boundaries
 
-![Expected benefits alongside the limits of the current offline design](docs/images/benefits-and-limits.svg)
+![Expected benefits alongside the limits of the current demo](docs/images/benefits-and-limits.svg)
 
 The replay demonstrates source-linked drafts, explicit recovery and closure decisions, and routing based on recurrence. The example reduction from **3 to 1 confirmed discards per 100 edits** is synthetic. A production pilot would measure repeat escalations, follow-up completion, and time to verified closure. The demo records a 30-day review commitment without scheduling it.
 

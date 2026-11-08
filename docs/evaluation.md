@@ -12,7 +12,7 @@ python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
 ```
 
-The [Actions workflow](../.github/workflows/evals.yml) runs both commands with Python 3.11. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The browser replay is a manual verification result outside the CI suites.
+The [Actions workflow](../.github/workflows/evals.yml) runs both commands with Python 3.11. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, draft reapproval, customer recovery, team and executive verification, closure, reload, and reset. These browser checks are manual and run separately from CI.
 
 ## What the numbers mean
 

@@ -1,4 +1,4 @@
-"""Offline escalation coordinator. Agents read evidence and propose. The reviewer decides."""
+"""Deterministic escalation coordinator. Agents read evidence and propose. The reviewer decides."""
 import json
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
