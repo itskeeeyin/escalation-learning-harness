@@ -10,3 +10,7 @@ jobs:
           python-version: '3.11'
       - run: python assessment_check.py --copilot-path .
       - run: python -m unittest -v
+      - run: |
+          python workflow_eval.py --report "$RUNNER_TEMP/workflow-scorecard.json"
+          python build_demo.py
+          node test_hosted.mjs "$RUNNER_TEMP/workflow-scorecard.json"

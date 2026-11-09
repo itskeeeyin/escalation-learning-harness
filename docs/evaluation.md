@@ -6,13 +6,17 @@
 | --- | ---: | --- |
 | Assessment golden cases | 8 | Confirmed discard, unverified missing template, unsupported restore and impact claims, preview approval, re-review after revision, conditional question issue, and unsupported community citation |
 | Learning workflow checks | 7 | Premature learning, draft invalidation, separate recovery and learning closure, recurrence exclusion, routing with insufficient history, action and executive verification, and stale case revisions |
+| Workflow replay scorecard | 3 | Incomplete proof and resubmission, separate routing for a launch-picker lookalike, and reopening and reclosing after a confirmed repeat |
 
 ```sh
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
+python3 workflow_eval.py
 ```
 
-The [Actions workflow](../.github/workflows/evals.yml) runs both commands with Python 3.11. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, draft reapproval, customer recovery, team and executive verification, closure, reload, and reset. These browser checks are manual and run separately from CI.
+The [Actions workflow](../.github/workflows/evals.yml) runs all three checks with Python 3.11 and checks that the generated browser replay matches the Python scorecard. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, proof resubmission, separate routing for the alternate case, and reopening and reclosing after a confirmed repeat. These browser checks are manual and run separately from CI.
+
+Export the per-step decisions, evidence checks, and failures with `python3 workflow_eval.py --report /tmp/escalation-scorecard.json`. The [iteration notes](iteration.md) explain the before and after.
 
 ## What the numbers mean
 

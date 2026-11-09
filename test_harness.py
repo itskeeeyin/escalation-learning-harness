@@ -74,6 +74,10 @@ class HarnessTests(unittest.TestCase):
         for command, action_id in (("verify", "EXEC"), ("close", None)):
             with self.assertRaises(ReviewError):
                 self.apply(command, action_id)
+        with self.assertRaisesRegex(ReviewError, "Engineering proof is incomplete"):
+            self.apply("verify", "ENG")
+        self.apply("return_proof")
+        self.apply("resubmit_proof")
         for key in ["ENG", "PROD", "SUP", "CS", "DOC", "OPS"]:
             self.apply("verify", key)
         self.apply("verify", "EXEC")
