@@ -6,7 +6,7 @@ A runnable demo that follows a critical customer escalation from the first repor
 
 ![Escalation learning loop with evidence inputs, reviewer decisions, verified outputs, and a proposed production feedback loop](docs/images/learning-loop.svg)
 
-The demo replays one fictional assessment-template incident. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
+The demo replays a fictional assessment-template discard and a separate launch-picker lookalike. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
 
 ## Practice the case
 
@@ -14,7 +14,8 @@ The demo replays one fictional assessment-template incident. The agents run dete
 2. **Coordinate.** Review the executive brief and customer draft. Try the unsupported restore claim to see the approval block. Approve supported wording, revise it, and watch the preview lock again until the new version is approved.
 3. **Confirm recovery.** Replay Support's rebuild validation and the customer's acceptance. The customer moves to **Recovered** while learning stays **Open**.
 4. **Learn.** Run the RCA, recurrence, and routing stages. Two prior confirmed discard cases match. A similar launch-picker report is excluded because its mechanism is unverified.
-5. **Verify.** Approve the follow-up plan and review simulated completion evidence. Verify each action, then record executive sign-off and close learning. **Export JSON** saves the decision record.
+5. **Verify.** Return Engineering’s incomplete submission, replay revised evidence, and verify the actions before executive sign-off.
+6. **Review recurrence.** Load both reports after closure. Keep the filter issue separate, then reopen preventive work for a confirmed repeat. Verify revised Engineering proof and executive sign-off again. **Export JSON** saves the decision record.
 
 [Open a screenshot of the live demo](docs/images/demo-preview.png) · [Read the rehearsal guide](docs/demo-guide.md)
 
@@ -38,6 +39,7 @@ The escalation manager owns the case, confirms priority and recovery, approves t
 
 The replay demonstrates source-linked drafts, explicit recovery and closure decisions, and routing based on recurrence. The example reduction from **3 to 1 confirmed discards per 100 edits** is synthetic. A production pilot would measure repeat escalations, follow-up completion, and time to verified closure. The demo records a 30-day review commitment without scheduling it.
 
+- [What changed and why](docs/iteration.md) compares the first release, review findings, and rerun results.
 - [Design notes](docs/design.md) describe inputs, outputs, code structure, and proposed production work.
 - [Rehearsal guide](docs/demo-guide.md) includes the main walkthrough and what to inspect at each decision.
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
@@ -47,11 +49,12 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 
 These commands are optional. They check the fixtures on a machine that already has the repository. They are not required to use the hosted case.
 
-GitHub Actions runs the same two commands on pushes and pull requests with Python 3.11. See the [workflow](.github/workflows/evals.yml). A local server is also optional: from a checkout, `python3 serve.py` listens on [127.0.0.1:8796](http://127.0.0.1:8796). Python 3.11 or newer and the standard library are enough. If that port is in use, pass `--port 8797`.
+GitHub Actions runs the three Python checks below, then compares the generated browser replay with the Python scorecard. See the [workflow](.github/workflows/evals.yml). That comparison is maintainer verification. It is not a hosted evaluation panel. A local server is also optional: from a checkout, `python3 serve.py` listens on [127.0.0.1:8796](http://127.0.0.1:8796). Python 3.11 or newer and the standard library are enough. Node is needed only for the replay comparison. If that port is in use, pass `--port 8797`.
 
 ```sh
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
+python3 workflow_eval.py
 ```
 
 ## Prior work and license

@@ -5,7 +5,20 @@
     "R3": ["Joint RCA review", "The draft ID and timestamp align with the discard event. A review on a test copy confirmed that the prompt did not identify the draft by name or explicitly state that configuration would be lost."],
     "H1": ["Prior case ESC-0987", "Confirmed draft discard in assessment template authoring. An administrator expected to reopen a draft after confirming Discard."],
     "H2": ["Prior case ESC-1011", "Confirmed draft discard in assessment template authoring. The team rebuilt from a worksheet after interpreting Discard as leaving the editor."],
-    "H3": ["Prior case ESC-1043", "Template missing from the launch picker. Record type, solution and discard status remain unverified."]
+    "H3": ["Prior case ESC-1043", "Template missing from the launch picker. Record type, solution and discard status remain unverified in this historical record."],
+    "P1": ["Customer report", "An administrator reports that an assessment template is missing just before a planned launch."],
+    "P2": ["Publish and audit records", "The template is published in the Compliance solution. The audit log shows a successful publish and no discard event for this template."],
+    "P3": ["Support reproduction", "The launch picker was scoped to the Privacy solution. Switching to Compliance makes the same published template visible."],
+    "P4": ["Customer validation", "Support reproduced the corrected picker path. The administrator confirmed the template was visible and completed a test launch."],
+    "V1": ["Engineering submission", "The pull request is merged. The submission has no passing regression result or replay of the affected customer path."],
+    "V2": ["Engineering validation", "The simulated CI report and customer-path replay are linked to the reviewed build. They cover the warning and draft preservation on cancel."],
+    "V3": ["Reopened Engineering validation", "CI-42 and customer-path replay CX-42 passed on the patched build, using the second editor entry point identified in the repeat."],
+    "S1": ["30-day report A", "Another administrator cannot find a published template in the launch picker. Support reproduces the issue with the wrong solution filter and confirms visibility with the correct filter."],
+    "S2": ["30-day report B", "Audit records confirm a new draft discard in template authoring. Support reproduces the missing warning through a second editor entry point on the patched build."]
+  },
+  "review_signals": {
+    "a": {"source":"S1","surface":"launch_picker","mechanism":"solution_filter","confirmed":true},
+    "b": {"source":"S2","surface":"template_authoring","mechanism":"draft_discard","confirmed":true}
   },
   "history": [
     {"id":"ESC-0987","source":"H1","surface":"template_authoring","mechanism":"draft_discard","confirmed":true},

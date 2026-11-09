@@ -23,7 +23,7 @@ The fictional customer is **Example Privacy Team**, case **ESC-1042**. Support v
 - The reviewer can confirm recovery after seeing Support validation and customer acceptance alongside an approved draft. Recovery unlocks RCA and routing.
 - Routing uses the team catalog. Product and Operations actions in this fixture require at least two prior matches. The general match rule requires a confirmed mechanism and the same product surface.
 - The reviewer approves the proposed plan before the harness assigns its actions. Verification requires an assigned action and loaded completion evidence. Executive verification follows the other team verifications.
-- Closure requires every assigned action to be verified. The export includes the recurrence review owner and interval.
+- Closure requires every assigned action to be verified. The 30-day replay reopens Engineering and executive verification only when the same product surface and mechanism are confirmed. Earlier proof remains available under its original evidence ID.
 
 The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/) replays the reachable states generated from the Python rules. The browser checks the case revision and keeps the decision record in the current tab. The local Python server checks revisions and holds sessions in memory. In both versions, one person plays the reviewer roles and can export decisions and evidence references as JSON.
 
@@ -37,13 +37,14 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | [scenario.json](../scenario.json) | Synthetic history, recovery evidence, team catalog, and completion evidence |
 | [serve.py](../serve.py) | Local HTTP interface and in-memory browser sessions |
 | [web/](../web/) | Replay UI, evidence viewer, executive brief, and JSON export |
-| [assessment_golden.json](../assessment_golden.json), [test_harness.py](../test_harness.py), and [test_reliability.py](../test_reliability.py) | Golden assessment scenarios, workflow guards, and local failure/recovery cases |
+| [assessment_golden.json](../assessment_golden.json), [test_harness.py](../test_harness.py), and [test_reliability.py](../test_reliability.py) | Golden assessment scenarios, workflow guards, and local HTTP failure/recovery cases |
+| [workflow_cases.json](../workflow_cases.json) and [workflow_eval.py](../workflow_eval.py) | Replay scorecard for incomplete proof, separate routing, and reopening after a confirmed repeat |
 
 ## Proposed production design
 
 | Workstream | Current replay | Proposed pilot |
 | --- | --- | --- |
-| Intake | A single interactive case with fixed evidence | Read approved case and product signals with stable record IDs and redacted customer data |
+| Intake | Two scripted paths and a fixed set of post-closure reports | Read approved case and product signals with stable record IDs and redacted customer data |
 | Reasoning | Deterministic stages and a small historical set | Use a larger, independently reviewed case set with confirmed matches, lookalikes, and contradictory evidence |
 | Decision authority | One reviewer plays every role | Authenticate decision-makers and enforce ownership and approval roles at each gate |
 | Work tracking | Fixture-based action catalog and simulated proof | Use approved, retry-safe ticket creation and link actual changes, tests, and customer acceptance |

@@ -1,0 +1,46 @@
+{
+  "dataset": "escalation-replay-regressions-v1",
+  "setup": {
+    "follow_up": ["reveal", "confirm_priority", "approve", "load_resolution", "confirm_recovery", "learn", "approve_plan", "load_proof"],
+    "close": ["return_proof", "resubmit_proof", "verify:ENG", "verify:PROD", "verify:SUP", "verify:CS", "verify:DOC", "verify:OPS", "verify:EXEC", "close"]
+  },
+  "cases": [
+    {
+      "id": "reject_incomplete_proof",
+      "setup": ["follow_up"],
+      "steps": [
+        {"command": "verify:ENG", "blocked": "Engineering proof is incomplete", "expect": {"stage": "Verify", "recovered": true, "engineering_proof": "V1"}},
+        {"command": "return_proof", "expect": {"engineering_state": "Needs rework"}},
+        {"command": "resubmit_proof", "expect": {"engineering_state": "Assigned", "engineering_proof": "V2"}},
+        {"command": "verify:ENG", "expect": {"engineering_state": "Verified"}},
+        {"command": "close", "blocked": "Every assigned action needs owner sign-off", "expect": {"stage": "Verify"}}
+      ]
+    },
+    {
+      "id": "exclude_picker_lookalike",
+      "steps": [
+        {"command": "start_picker", "expect": {"case_id": "ESC-1043", "stage": "Reported", "triage_case_id": null}},
+        {"command": "inspect_picker", "expect": {"stage": "Evidence", "executive_sources": ["P1", "P2", "P3"]}},
+        {"command": "route_as_discard", "blocked": "support a visibility issue", "expect": {"stage": "Evidence"}},
+        {"command": "route_picker", "expect": {"stage": "Routed", "assigned_actions": []}},
+        {"command": "recover_picker", "expect": {"stage": "Recovered", "recovered": true, "executive_sources": ["P1", "P2", "P3", "P4"], "assigned_actions": []}}
+      ]
+    },
+    {
+      "id": "reopen_and_reclose_confirmed_repeat",
+      "setup": ["follow_up", "close"],
+      "steps": [
+        {"command": "load_signal:a", "expect": {"stage": "Closed", "active_report": "S1"}},
+        {"command": "decide_signal:repeat", "blocked": "conflicts with the report evidence", "expect": {"stage": "Closed", "active_report": "S1"}},
+        {"command": "decide_signal:separate", "expect": {"stage": "Closed", "report_decisions": {"a": "Separate issue"}}},
+        {"command": "load_signal:b", "expect": {"active_report": "S2"}},
+        {"command": "decide_signal:repeat", "expect": {"stage": "Verify", "recovered": true, "engineering_state": "Needs rework", "executive_state": "Assigned", "verified_actions": 5}},
+        {"command": "verify:EXEC", "blocked": "Executive sign-off requires", "expect": {"executive_state": "Assigned"}},
+        {"command": "resubmit_proof", "expect": {"engineering_proof": "V3"}},
+        {"command": "verify:ENG", "expect": {"engineering_state": "Verified", "verified_actions": 6}},
+        {"command": "verify:EXEC", "expect": {"verified_actions": 7}},
+        {"command": "close", "expect": {"stage": "Closed", "recovered": true, "report_decisions": {"a": "Separate issue", "b": "Confirmed repeat"}}}
+      ]
+    }
+  ]
+}

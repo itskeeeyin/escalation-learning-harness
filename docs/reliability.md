@@ -8,7 +8,7 @@ The demo workflow is rule-based. `serve.py` accepts a small JSON review action, 
 
 There is no tool-call timeout, automatic retry, or fallback model. The browser client in `web/app.js` shows the error text and ignores a second click while one request is in flight. It does not retry. Token use and model cost are unmeasured because this repository does not call a model. The checks below are optional maintainer verification. No API key is required for them. The hosted demo is the case replay; these checks do not add a browser evaluation panel.
 
-The read-only helper `incident_triage.triage` is separate from the customer-recovery workflow. `command_center.workflow` uses `validate_incident` to reject malformed case records. It does not use the keyword hypotheses.
+The read-only helper `incident_triage.triage` is separate from the customer-recovery workflow. `command_center.workflow` uses `validate_incident` to reject malformed case records. It does not use the keyword hypotheses. Incomplete proof, the launch-picker route, and reopening after a confirmed repeat are covered by `workflow_eval.py` and [iteration notes](iteration.md), not by the HTTP cases below.
 
 ## What failed, and how it was reproduced
 

@@ -1,4 +1,4 @@
-# Five-minute rehearsal
+# Demo rehearsal
 
 ## 1. Establish impact
 
@@ -16,9 +16,17 @@ Select **Replay recovery evidence**, inspect R1 and R2, and confirm customer rec
 
 Run the learning agents. Read R3 for the prompt design finding. Open the prior-case section. ESC-0987 and ESC-1011 match on confirmed discard in template authoring. ESC-1043 describes a missing template in the launch picker and stays excluded. Compare the Engineering safeguard, Product usability check, and Operations recurrence measure.
 
-## 5. Close on verified outcomes
+## 5. Review incomplete proof
 
-Approve the plan and replay completion evidence. Verify each action using the stated acceptance criterion and the simulated proof. Executive verification becomes available after the other six actions are verified. Close learning and export the JSON. The file includes the decisions, action evidence, and the recurrence review owner and interval.
+Approve the plan and replay completion evidence. Engineering initially supplies only a merged PR. Open V1, return the submission, and replay the revised evidence. Open V2 and verify Engineering. Verify the other owners, record executive sign-off, and close learning.
+
+## 6. Reopen a confirmed repeat
+
+In the 30-day review, load **Report A** and keep it separate. A published template hidden by a solution filter has a different mechanism. Load **Report B** and confirm the repeat. The customer remains **Recovered** while Engineering and executive sign-off reopen. Replay the revised proof, inspect V3, verify both owners, and reclose. The original V2 evidence remains in the trace. **Export JSON** saves both decisions.
+
+## Alternate case
+
+Restart and select **Try the launch-picker case**. Inspect the publish and filter evidence. Attempting to route it as draft discard is blocked. Route it to launch-picker Support and confirm launch readiness. This case has its own evidence and recovery record.
 
 ![Demo paused after customer recovery with seven assigned follow-ups awaiting verification](images/demo-preview.png)
 
