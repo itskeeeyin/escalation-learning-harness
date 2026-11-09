@@ -6,7 +6,7 @@ This page records failure and recovery behavior that the local harness already i
 
 The demo workflow is rule-based. `serve.py` accepts a small JSON review action, and `harness.py` applies it only when the case revision and the evidence gates match. A rejected action raises `ReviewError` before `revision` increments, and the HTTP handler returns that message with status 409. Malformed bodies return 400 and leave the session as it was. A request whose `Origin` is not this server returns 403 before the session is read.
 
-There is no tool-call timeout, automatic retry, or fallback model. The browser client in `web/app.js` shows the error text and ignores a second click while one request is in flight. It does not retry. Token use and model cost are unmeasured because this repository does not call a model. No API key is required for the checks below.
+There is no tool-call timeout, automatic retry, or fallback model. The browser client in `web/app.js` shows the error text and ignores a second click while one request is in flight. It does not retry. Token use and model cost are unmeasured because this repository does not call a model. The checks below are optional maintainer verification. No API key is required for them. The hosted demo is the case replay; these checks do not add a browser evaluation panel.
 
 The read-only helper `incident_triage.triage` is separate from the customer-recovery workflow. `command_center.workflow` uses `validate_incident` to reject malformed case records. It does not use the keyword hypotheses.
 
@@ -39,9 +39,9 @@ No demo route, public URL, style, or session behavior was changed. No dependency
 
 ## Measured results
 
-Run on this workspace with Python 3.12.3 on 2026-11-09. GitHub Actions uses Python 3.11; these timings are from the local interpreter only.
+The numbers below are from one maintainer run of the fixture checks on this workspace with Python 3.12.3 on 2026-11-09. GitHub Actions uses Python 3.11. They are not a hosted evaluation and they do not measure the public demo in a browser.
 
-Command:
+Optional maintainer commands, from a checkout:
 
 ```sh
 python3 -m unittest test_reliability test_harness

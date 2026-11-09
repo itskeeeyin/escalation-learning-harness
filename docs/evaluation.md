@@ -8,6 +8,8 @@
 | Learning workflow checks | 7 | Premature learning, draft invalidation, separate recovery and learning closure, recurrence exclusion, routing with insufficient history, action and executive verification, and stale case revisions |
 | Reliability cases | 7 | Malformed HTTP bodies, rejected origins, missing sessions, unknown and stale actions, blocked restore claims with recovery, missing recovery evidence, and malformed incident records |
 
+The commands below are optional maintainer verification from a checkout. The hosted demo is the way to practice the case. CI does not browse the hosted demo, and there is no hosted evaluation panel.
+
 ```sh
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v

@@ -1,4 +1,4 @@
-"""Practice workflow for the assessment-template interview demo."""
+"""Practice workflow for the assessment-template escalation case."""
 
 import json
 from dataclasses import dataclass, field
