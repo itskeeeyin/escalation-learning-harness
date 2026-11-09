@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "dataset_id": "onetrust-assessment-template-escalation",
-  "description": "Interview practice dataset. Product guidance is paraphrased from public OneTrust documentation. Public community reports are anecdotal and used as scenario inspiration. All case records, organizations, events, severity rules, drafts and decisions are fictional.",
+  "description": "Practice dataset for an escalation-manager case. Product guidance is paraphrased from public OneTrust documentation. Public community reports are anecdotal and used as scenario inspiration. All case records, organizations, events, severity rules, drafts and decisions are fictional.",
   "source_retrieval": {
     "method": "Public search-indexed article text",
     "access_note": "Direct fetches of the two MyOneTrust articles returned cache misses. Their guidance comes from the publicly indexed article bodies. Community sources are public Reddit discussions. No MyOneTrust community posts were verified."

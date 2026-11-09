@@ -37,7 +37,8 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | [scenario.json](../scenario.json) | Synthetic history, recovery evidence, team catalog, and completion evidence |
 | [serve.py](../serve.py) | Local HTTP interface and in-memory browser sessions |
 | [web/](../web/) | Replay UI, evidence viewer, executive brief, and JSON export |
-| [assessment_golden.json](../assessment_golden.json) and [test_harness.py](../test_harness.py) | Golden assessment scenarios and workflow guard checks |
+| [assessment_golden.json](../assessment_golden.json), [test_harness.py](../test_harness.py), and [test_reliability.py](../test_reliability.py) | Golden assessment scenarios, workflow guards, and local HTTP failure/recovery cases |
+| [workflow_cases.json](../workflow_cases.json) and [workflow_eval.py](../workflow_eval.py) | Replay scorecard for incomplete proof, separate routing, and reopening after a confirmed repeat |
 
 ## Proposed production design
 

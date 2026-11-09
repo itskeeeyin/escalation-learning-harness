@@ -8,19 +8,7 @@ A runnable demo that follows a critical customer escalation from the first repor
 
 The demo replays a fictional assessment-template discard and a separate launch-picker lookalike. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
 
-## Run the Python version locally
-
-The local version requires Python 3.11 or newer and uses the standard library.
-
-```sh
-git clone https://github.com/itskeeeyin/escalation-learning-harness.git
-cd escalation-learning-harness
-python3 serve.py
-```
-
-Open [the local demo](http://127.0.0.1:8796). If the port is in use, run `python3 serve.py --port 8797` and open that port instead. Use **Restart practice case** to rehearse again.
-
-## What to show
+## Practice the case
 
 1. **Engage.** Open the customer report. Run triage, inspect the discard event and rollout impact, then confirm P2. The severity rubric is fictional.
 2. **Coordinate.** Review the executive brief and customer draft. Try the unsupported restore claim to see the approval block. Approve supported wording, revise it, and watch the preview lock again until the new version is approved.
@@ -55,16 +43,19 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 - [Design notes](docs/design.md) describe inputs, outputs, code structure, and proposed production work.
 - [Rehearsal guide](docs/demo-guide.md) includes the main walkthrough and what to inspect at each decision.
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
+- [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
 
-## Run the checks
+## Maintainer verification
+
+These commands are optional. They check the fixtures on a machine that already has the repository. They are not required to use the hosted case.
+
+GitHub Actions runs the three Python checks below, then compares the generated browser replay with the Python scorecard. See the [workflow](.github/workflows/evals.yml). That comparison is maintainer verification. It is not a hosted evaluation panel. A local server is also optional: from a checkout, `python3 serve.py` listens on [127.0.0.1:8796](http://127.0.0.1:8796). Python 3.11 or newer and the standard library are enough. Node is needed only for the replay comparison. If that port is in use, pass `--port 8797`.
 
 ```sh
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
 python3 workflow_eval.py
 ```
-
-GitHub Actions runs all three checks on pushes and pull requests. See the [workflow](.github/workflows/evals.yml).
 
 ## Prior work and license
 
