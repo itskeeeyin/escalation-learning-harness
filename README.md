@@ -53,6 +53,7 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 - [Design notes](docs/design.md) describe inputs, outputs, code structure, and proposed production work.
 - [Rehearsal guide](docs/demo-guide.md) includes the main walkthrough and what to inspect at each decision.
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
+- [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
 
 ## Run the checks
 
