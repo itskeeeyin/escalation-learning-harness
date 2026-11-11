@@ -1,0 +1,30 @@
+{
+  "_sample": true,
+  "_note": "Synthetic conversations.replies payload. Not from a Slack workspace.",
+  "ok": true,
+  "channel": "C0SAMPLE",
+  "messages": [
+    {
+      "type": "message",
+      "user": "U0ONCALL",
+      "text": "PagerDuty Q0SAMPLEINCIDENT: assessment draft discarded before the Example Privacy Team rollout.",
+      "ts": "1712067840.000100",
+      "thread_ts": "1712067840.000100"
+    },
+    {
+      "type": "message",
+      "user": "U0SUPPORT",
+      "text": "Reproduced the discard on the template editor. Rebuilding from the worksheet. Case notes will land on the customer record.",
+      "ts": "1712068200.000200",
+      "thread_ts": "1712067840.000100"
+    },
+    {
+      "type": "message",
+      "user": "U0CS",
+      "text": "Customer accepted the rebuilt template. Learning record stays open until owners verify the follow-up.",
+      "ts": "1712080800.000300",
+      "thread_ts": "1712067840.000100"
+    }
+  ],
+  "has_more": false
+}

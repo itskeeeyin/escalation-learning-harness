@@ -1,0 +1,10 @@
+{
+  "_sample": true,
+  "_note": "Synthetic Pylon account. Not from a Pylon workspace.",
+  "data": {
+    "id": "account_sample_privacy",
+    "name": "Example Privacy Team",
+    "domains": ["example-privacy.test"],
+    "tags": ["sample"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "_sample": true,
+  "_note": "Synthetic Pylon issue. Not from a Pylon workspace.",
+  "data": {
+    "id": "issue_sample_1042",
+    "number": 1042,
+    "title": "Draft discarded ahead of the privacy rollout",
+    "body_html": "<p>We confirmed Discard and the template was gone. The rollout is tomorrow.</p>",
+    "state": "closed",
+    "source": "slack",
+    "link": "https://app.usepylon.com/issues?issueNumber=1042",
+    "created_at": "2026-04-02T15:25:00.000Z",
+    "latest_message_time": "2026-04-02T18:42:00.000Z",
+    "tags": ["escalation", "template-authoring"],
+    "account": {"id": "account_sample_privacy"},
+    "requester": {"id": "contact_sample", "email": "admin@example-privacy.test"},
+    "slack": {
+      "channel_id": "C0SAMPLE",
+      "message_ts": "1712067840.000100",
+      "workspace_id": "T0SAMPLE"
+    }
+  }
+}

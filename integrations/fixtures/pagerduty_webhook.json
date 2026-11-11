@@ -1,0 +1,30 @@
+{
+  "_sample": true,
+  "_note": "Synthetic PagerDuty v3 webhook. Not from a PagerDuty account.",
+  "event": {
+    "id": "01SAMPLEEVENT0000000000000",
+    "event_type": "incident.triggered",
+    "resource_type": "incident",
+    "occurred_at": "2026-04-02T15:04:00Z",
+    "agent": null,
+    "client": null,
+    "data": {
+      "type": "incident",
+      "id": "Q0SAMPLEINCIDENT",
+      "incident_number": 1042,
+      "title": "Assessment draft discarded during template edit",
+      "description": "An administrator reported that confirming Discard removed the assessment draft before a rollout.",
+      "status": "triggered",
+      "urgency": "high",
+      "html_url": "https://example.pagerduty.com/incidents/Q0SAMPLEINCIDENT",
+      "created_at": "2026-04-02T15:04:00Z",
+      "service": {
+        "id": "PSAMPLE",
+        "type": "service_reference",
+        "summary": "Assessment templates",
+        "self": "https://api.pagerduty.com/services/PSAMPLE",
+        "html_url": "https://example.pagerduty.com/service-directory/PSAMPLE"
+      }
+    }
+  }
+}

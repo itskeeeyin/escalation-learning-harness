@@ -45,6 +45,14 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
 - [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
 
+## Tool adapters
+
+The same fictional case can be replayed from labeled sample payloads for PagerDuty, Slack, ServiceNow, Salesforce, and Pylon. Lessons for Engineering, Product, and Customer Success become proposed Jira tasks, a Slack status post, and a ServiceNow work note. Those writes stay proposed until a person approves them, and execution is a dry run unless live mode is set on purpose.
+
+![Sample tool replay with inbound fixtures, the learning record, and proposed writes](docs/images/integrations.svg)
+
+Nothing in that path signs in to a company instance. CI uses the fixtures only. [Tool adapters](docs/integrations.md) lists the public API fields, the environment variables a live send would need, and the approval rule. From a local checkout the replay is at [127.0.0.1:8796/integrations.html](http://127.0.0.1:8796/integrations.html) after `python3 serve.py`.
+
 ## Maintainer verification
 
 These commands are optional. They check the fixtures on a machine that already has the repository. They are not required to use the hosted case.

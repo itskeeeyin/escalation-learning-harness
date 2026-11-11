@@ -1,0 +1,15 @@
+{
+  "_sample": true,
+  "_note": "Synthetic Table API problem. Not from a ServiceNow instance.",
+  "result": {
+    "sys_id": "b2c3d4e5f6478990abcdeffedcba98a1",
+    "number": "PRB0001042",
+    "short_description": "Irreversible draft discard in template authoring",
+    "description": "Confirmed mechanism draft_discard on surface template_authoring. Two prior incidents match. The warning copy omitted the draft name.",
+    "state": "103",
+    "priority": "2",
+    "impact": "2",
+    "urgency": "2",
+    "opened_at": "2026-04-02 19:05:00"
+  }
+}

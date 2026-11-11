@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cross-tool sample replay</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top"><div class="shell bar"><div class="brand"><span class="mark" aria-hidden="true">↻</span> Fieldwork <small> / SAMPLE INTEGRATIONS</small></div><span class="practice"><i></i> OFFLINE FIXTURES</span></div></header>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">CUSTOMER OPERATIONS &nbsp; / &nbsp; TOOL REPLAY</div>
+      <h1>One escalation, several systems of record</h1>
+      <p>This page replays labeled sample payloads. It does not sign in to ServiceNow, Pylon, Salesforce, Jira, PagerDuty, or Slack.</p>
+    </section>
+    <div id="app"><p>Loading the sample replay…</p></div>
+    <footer><span>Synthetic payloads. Writes stay proposed until a person approves them, and this page never sends them.</span><div><a href="/">Practice case</a> · <a href="https://github.com/itskeeeyin/escalation-learning-harness/blob/main/docs/integrations.md">How the adapters work</a></div></footer>
+  </main>
+  <script>
+    const app = document.querySelector("#app");
+    const escape = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[char]);
+
+    function signalLine(signal) {
+      return `<p><strong>${escape(signal.external_id)}</strong> · ${escape(signal.status)}</p>
+        <p class="sub">${escape(signal.title)}</p>
+        <p class="sub">${escape(signal.summary)}</p>`;
+    }
+
+    function stepBody(step) {
+      const detail = step.detail;
+      if (step.tool === "pagerduty") {
+        return `${signalLine(detail.signal)}
+          <ul class="clean">${detail.timeline.map(row => `<li><strong>${escape(row.type)}</strong> · ${escape(row.summary)}</li>`).join("")}</ul>`;
+      }
+      if (step.tool === "slack" || step.tool === "salesforce") {
+        const rows = step.tool === "slack" ? [detail] : detail;
+        return rows.map(signalLine).join("");
+      }
+      if (step.tool === "servicenow") {
+        return `${signalLine(detail.incident)}<p class="sub">Problem ${escape(detail.problem.links.number)} · ${escape(detail.problem.status)}. ${escape(detail.problem.summary)}</p>`;
+      }
+      if (step.tool === "pylon") {
+        return `${signalLine(detail.issue)}<p class="sub">Account ${escape(detail.account.name)} · ${escape(detail.account.domains.join(", "))}</p>`;
+      }
+      if (step.tool === "harness") {
+        return `<p>${escape(detail.cause)}</p>
+          <ul class="clean">${detail.actions.map(action => `<li><strong>${escape(action.id)}</strong> · ${escape(action.team)}. ${escape(action.title)}</li>`).join("")}</ul>`;
+      }
+      const dry = detail.approved_dry_run;
+      return `<ul class="clean">${detail.proposals.map(item => `<li><span class="status pending">${escape(item.state)}</span> <strong>${escape(item.tool)}</strong> · ${escape(item.summary)}</li>`).join("")}</ul>
+        <p class="note">Approving the Engineering Jira task in this replay produces a dry run. Status: ${escape(dry.status)}. Network called: ${dry.network ? "yes" : "no"}.</p>`;
+    }
+
+    fetch("./integrations.json").then(response => response.json()).then(replay => {
+      app.innerHTML = `<p class="note">${escape(replay.summary)}</p>
+        <ol class="clean">${replay.steps.map(step => `<li>
+          <div class="label">STEP ${step.step} · ${escape(step.direction.toUpperCase())}</div>
+          <h2>${escape(step.label)}</h2>
+          ${stepBody(step)}
+        </li>`).join("")}</ol>`;
+    }).catch(() => {
+      app.innerHTML = "<p>The sample replay did not load. Open this page from the local server or the built demo.</p>";
+    });
+  </script>
+</body>
+</html>

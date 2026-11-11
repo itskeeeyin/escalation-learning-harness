@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from harness import DATA, Harness, ReviewError
+from integrations.replay import cross_tool_replay
 
 ROOT = Path(__file__).resolve().parent
 COMMANDS = (
@@ -80,8 +81,10 @@ def build():
         "Fictional case. Decisions stay in this browser tab.",
     )
     html = html.replace(
-        '<div><a href="https://github.com/itskeeeyin/runbook-copilot">',
-        '<div><a href="https://github.com/itskeeeyin/escalation-learning-harness">Source code</a> · '
+        '<div><a href="/integrations.html">Sample tool replay</a> · '
+        '<a href="https://github.com/itskeeeyin/runbook-copilot">',
+        '<div><a href="./integrations.html">Sample tool replay</a> · '
+        '<a href="https://github.com/itskeeeyin/escalation-learning-harness">Source code</a> · '
         '<a href="https://github.com/itskeeeyin/escalation-learning-harness/blob/main/docs/demo-guide.md">'
         'Walkthrough</a> · <a href="https://github.com/itskeeeyin/escalation-learning-harness/blob/main/docs/iteration.md">'
         'What changed</a> · <a href="https://github.com/itskeeeyin/runbook-copilot">',
@@ -100,6 +103,12 @@ def build():
     (dist / "replay.mjs").write_bytes((ROOT / "hosted/replay.mjs").read_bytes())
     graph = replay_graph()
     (dist / "case.json").write_text(json.dumps(graph, separators=(",", ":")), encoding="utf-8")
+    page = (ROOT / "web/integrations.html").read_text(encoding="utf-8")
+    page = page.replace('href="/style.css"', 'href="./style.css"')
+    (dist / "integrations.html").write_text(page, encoding="utf-8")
+    (dist / "integrations.json").write_text(
+        json.dumps(cross_tool_replay(DATA["actions"])), encoding="utf-8"
+    )
     print(f"Generated {len(graph['nodes'])} reachable states.")
 
 
