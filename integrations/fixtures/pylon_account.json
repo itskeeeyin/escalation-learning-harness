@@ -1,0 +1,12 @@
+{
+  "sample": true,
+  "label": "Fictional Pylon account. Domains use the reserved example.test name.",
+  "body": {
+    "data": {
+      "id": "acc_sample_privacy",
+      "name": "Example Privacy Team",
+      "domains": ["example-privacy.test"],
+      "external_ids": [{"label": "sample-crm", "external_id": "001SAMPLEACCOUNT"}]
+    }
+  }
+}

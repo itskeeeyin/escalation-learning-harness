@@ -1,0 +1,37 @@
+{
+  "sample": true,
+  "label": "Fictional Jira issue_created webhook. your-domain.atlassian.net is a placeholder host.",
+  "body": {
+    "timestamp": 1743620000000,
+    "webhookEvent": "jira:issue_created",
+    "issue_event_type_name": "issue_created",
+    "user": {
+      "accountId": "5b10a2844c20165700ede21g",
+      "displayName": "Sample reviewer"
+    },
+    "issue": {
+      "id": "99291",
+      "self": "https://example.atlassian.net/rest/api/3/issue/99291",
+      "key": "LEARN-17",
+      "fields": {
+        "summary": "Protect the draft discard path",
+        "created": "2026-04-02T18:00:00.000-0700",
+        "description": {
+          "type": "doc",
+          "version": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [{"type": "text", "text": "Acceptance: CI covers the cancel path."}]
+            }
+          ]
+        },
+        "status": {"name": "To Do", "id": "10000"},
+        "issuetype": {"name": "Task", "id": "10001"},
+        "project": {"key": "LEARN", "id": "10010"},
+        "labels": ["escalation-learning", "action-item"],
+        "priority": {"name": "High", "id": "2"}
+      }
+    }
+  }
+}

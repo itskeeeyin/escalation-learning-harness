@@ -8,6 +8,7 @@
 | Learning workflow checks | 7 | Premature learning, draft invalidation, separate recovery and learning closure, recurrence exclusion, routing with insufficient history, action and executive verification, and stale case revisions |
 | Reliability cases | 7 | Malformed HTTP bodies, rejected origins, missing sessions, unknown and stale actions, blocked restore claims with recovery, missing recovery evidence, and malformed incident records |
 | Workflow replay scorecard | 3 | Incomplete proof and resubmission, separate routing for a launch-picker lookalike, and reopening and reclosing after a confirmed repeat |
+| Support-tool adapters | 12 | Fixture parsing and harness mapping for six tools, approval before execute, dry-run by default, and live pulls that refuse missing credentials |
 
 The commands below are optional maintainer verification from a checkout. The hosted demo is the way to practice the case. CI does not browse the hosted demo, and there is no hosted evaluation panel.
 

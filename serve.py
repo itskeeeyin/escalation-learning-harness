@@ -9,6 +9,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
 from harness import Harness, ReviewError
+from integrations.replay import cross_tool_replay
 
 DIST = Path(__file__).with_name("web")
 MAX_SESSIONS = 128
@@ -49,6 +50,8 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path == "/api/session":
             session, token = self._session(create=True)
             self._json(session.view(), token=token)
+        elif self.path == "/integrations-replay.json":
+            self._json(cross_tool_replay())
         elif self.path == "/" or self.path in {"/style.css", "/app.js"}:
             super().do_GET()
         else:

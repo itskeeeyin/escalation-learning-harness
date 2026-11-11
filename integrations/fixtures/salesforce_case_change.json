@@ -1,0 +1,17 @@
+{
+  "sample": true,
+  "label": "Fictional Case change event body. Not delivered by a Salesforce org.",
+  "body": {
+    "ChangeEventHeader": {
+      "entityName": "Case",
+      "recordIds": ["500SAMPLE0000001042AA"],
+      "changeType": "UPDATE",
+      "changedFields": ["Status"],
+      "commitUser": "005SAMPLEOWNER",
+      "commitTimestamp": 1743609000000
+    },
+    "Subject": "Example Privacy Team assessment draft missing before rollout",
+    "Status": "Escalated",
+    "Description": "Status moved to Escalated after the discard event was confirmed."
+  }
+}

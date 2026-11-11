@@ -1,0 +1,31 @@
+{
+  "sample": true,
+  "label": "Fictional Table API incident envelope. Instance name example.service-now.com is not a connected tenant.",
+  "body": {
+    "result": {
+      "sys_id": "a9e30c7dc61122760116894de7bcc7bd",
+      "number": "INC0010420",
+      "short_description": "Draft discarded before the Example Privacy Team assessment rollout",
+      "description": "The administrator confirmed Discard and the draft was removed. The rollout checklist still expects that template.",
+      "state": "6",
+      "priority": "2",
+      "urgency": "1",
+      "impact": "2",
+      "opened_at": "2026-04-02 15:12:08",
+      "sys_created_on": "2026-04-02 15:12:08",
+      "caller_id": {
+        "link": "https://example.service-now.com/api/now/table/sys_user/samplecaller",
+        "value": "samplecaller"
+      },
+      "assignment_group": {
+        "link": "https://example.service-now.com/api/now/table/sys_user_group/samplegroup",
+        "value": "samplegroup"
+      },
+      "problem_id": {
+        "link": "https://example.service-now.com/api/now/table/problem/04ce72c9c0a8016600b5b7f75ac67b5b",
+        "value": "04ce72c9c0a8016600b5b7f75ac67b5b"
+      },
+      "close_notes": "Customer accepted the rebuilt template. Prevention work remains on the problem record."
+    }
+  }
+}

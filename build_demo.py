@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from harness import DATA, Harness, ReviewError
+from integrations.replay import cross_tool_replay
 
 ROOT = Path(__file__).resolve().parent
 COMMANDS = (
@@ -100,6 +101,9 @@ def build():
     (dist / "replay.mjs").write_bytes((ROOT / "hosted/replay.mjs").read_bytes())
     graph = replay_graph()
     (dist / "case.json").write_text(json.dumps(graph, separators=(",", ":")), encoding="utf-8")
+    (dist / "integrations-replay.json").write_text(
+        json.dumps(cross_tool_replay(), indent=2), encoding="utf-8"
+    )
     print(f"Generated {len(graph['nodes'])} reachable states.")
 
 

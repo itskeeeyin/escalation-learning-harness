@@ -1,0 +1,16 @@
+{
+  "sample": true,
+  "label": "Fictional Pylon Send webhook body. Every value is a string, matching the webhook rules.",
+  "body": {
+    "issue_id": "iss_sample_1042",
+    "issue_number": "1042",
+    "title": "Template discarded before the privacy rollout",
+    "status": "waiting_on_you",
+    "tags": "escalation,assessment",
+    "account_id": "acc_sample_privacy",
+    "requester_email": "admin@example-privacy.test",
+    "message_body": "The draft is gone after the administrator confirmed Discard.",
+    "message_sent_at": "2026-04-02T15:18:00.000Z",
+    "message_is_private": "false"
+  }
+}
