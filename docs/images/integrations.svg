@@ -20,8 +20,10 @@ text{font-family:Inter,Arial,sans-serif}.title{font-size:36px;font-weight:700;fi
 <text x="58" y="326" class="body">Pylon issue and account</text>
 <text x="58" y="368" class="body">Each payload is marked _sample.</text>
 <text x="58" y="394" class="body">Fields follow the public API shape.</text>
-<text x="58" y="470" class="body">Live reads are optional and use</text>
-<text x="58" y="494" class="body">environment variables only.</text>
+<text x="58" y="428" class="body">Inbound adapters parse fixtures.</text>
+<text x="58" y="454" class="body">Live reads are not built yet.</text>
+<text x="58" y="480" class="body">Live sends use env vars only</text>
+<text x="58" y="506" class="body">after approval.</text>
 <rect x="430" y="156" width="380" height="360" rx="16" fill="#fff9db" stroke="#f0a000" stroke-width="2"/>
 <g fill="#876000"><text x="448" y="190" class="cardTitle">Harness lesson</text></g>
 <text x="448" y="222" class="body">Map the signals onto one case.</text>
@@ -43,5 +45,5 @@ text{font-family:Inter,Arial,sans-serif}.title{font-size:36px;font-weight:700;fi
 <path d="M810 336L856 336" fill="none" stroke="#5a6680" stroke-width="2.4" marker-end="url(#arrow)"/>
 <rect x="40" y="540" width="1120" height="72" rx="16" fill="#fff4e0" stroke="#e67700" stroke-width="2"/>
 <g fill="#a84e00"><text x="58" y="572" class="cardTitle">Human approval</text></g>
-<text x="58" y="596" class="body">Proposed, then approved, then dry-run. A live send is a separate choice and is not part of the demo or CI.</text>
+<text x="58" y="596" class="body">Proposed, then approved, then dry-run. Jira, Slack, and ServiceNow sends use env vars only after approval. Not in the demo or CI.</text>
 </svg>
