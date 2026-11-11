@@ -1,0 +1,23 @@
+{
+  "sample": true,
+  "label": "Fictional Slack Events API message callback. The verification token is a placeholder, not a secret from a workspace.",
+  "body": {
+    "token": "sample-deprecated-verification-token",
+    "team_id": "T0SAMPLE",
+    "api_app_id": "A0SAMPLE",
+    "type": "event_callback",
+    "event_id": "Ev0SAMPLE1042",
+    "event_time": 1743606240,
+    "authorizations": [
+      {"team_id": "T0SAMPLE", "user_id": "U0SAMPLEBOT", "is_bot": true}
+    ],
+    "event": {
+      "type": "message",
+      "channel": "C0SAMPLEINC",
+      "user": "U0SAMPLEONCALL",
+      "text": "PagerDuty 1042: Example Privacy Team cannot find the assessment draft before rollout.",
+      "ts": "1743606240.000100",
+      "channel_type": "channel"
+    }
+  }
+}

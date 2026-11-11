@@ -1,0 +1,17 @@
+{
+  "sample": true,
+  "label": "Fictional Table API problem record. State 104 is Fix in Progress on the problem state model.",
+  "body": {
+    "result": {
+      "sys_id": "04ce72c9c0a8016600b5b7f75ac67b5b",
+      "number": "PRB0010420",
+      "short_description": "Irreversible discard does not name the draft before confirmation",
+      "description": "Confirmed discard on the template authoring surface. A lookalike launch-picker report is a different mechanism.",
+      "state": "104",
+      "priority": "2",
+      "opened_at": "2026-04-02 16:40:00",
+      "sys_created_on": "2026-04-02 16:40:00",
+      "close_notes": ""
+    }
+  }
+}

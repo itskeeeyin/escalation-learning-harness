@@ -1,0 +1,35 @@
+{
+  "sample": true,
+  "label": "Fictional PagerDuty v3 incident.triggered webhook. Not from a PagerDuty account.",
+  "body": {
+    "event": {
+      "id": "01SAMPLEPDWEBHOOK0000000001",
+      "event_type": "incident.triggered",
+      "resource_type": "incident",
+      "occurred_at": "2026-04-02T15:04:00Z",
+      "agent": {
+        "id": "PUSER01SAMPLE",
+        "type": "user_reference",
+        "summary": "Sample on-call engineer"
+      },
+      "client": null,
+      "data": {
+        "id": "Q1SAMPLEINCIDENT",
+        "type": "incident",
+        "html_url": "https://example.pagerduty.com/incidents/1042",
+        "number": 1042,
+        "status": "triggered",
+        "incident_key": "esc-1042-draft-discard",
+        "created_at": "2026-04-02T15:04:00Z",
+        "title": "Assessment template draft discarded before the Example Privacy Team rollout",
+        "urgency": "high",
+        "priority": {"id": "PPRI2", "type": "priority_reference", "summary": "P2"},
+        "service": {
+          "id": "PSVCASSESS",
+          "type": "service_reference",
+          "summary": "Assessment authoring (sample)"
+        }
+      }
+    }
+  }
+}

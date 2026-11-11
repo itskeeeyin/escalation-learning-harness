@@ -45,6 +45,25 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
 - [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
 
+## Support tool integrations
+
+The learning loop can read escalation signals from the tools a support organization already uses, and it can propose follow-ups back into those tools. The default path is offline. Every payload under `integrations/fixtures/` is a labeled sample. The demo, the unit tests, and GitHub Actions do not call ServiceNow, Pylon, Salesforce, PagerDuty, Slack, or Jira, and they do not need accounts or API keys.
+
+![Sample signals enter the harness and writes stay proposed until approval](docs/images/tool-integrations.svg)
+
+| Tool | Direction in this harness | What the sample represents |
+| --- | --- | --- |
+| PagerDuty | In | A v3 `incident.triggered` webhook and the incident log-entry timeline |
+| Slack | In, and a proposed reply | An incident-channel thread from `conversations.replies`, plus a `chat.postMessage` body that is not sent |
+| ServiceNow | In, and a proposed internal note | Table API incident and problem records, plus a PATCH `work_notes` body that is not sent |
+| Salesforce | In | A Service Cloud Case retrieve and a Case change event |
+| Pylon | In | An issue (with its account id) and a string-valued webhook body |
+| Jira | Out | A proposed `POST /rest/api/3/issue` action item for the Engineering lesson |
+
+The cross-tool sample follows one fictional case: a PagerDuty page, the Slack thread, a resolved ServiceNow incident linked to a problem, a Salesforce Case, a Pylon issue for Example Privacy Team, the existing discard lesson, then three proposed writes. The local server exposes that replay at `/integrations-replay.json`. `python3 build_demo.py` copies it next to the static demo. Approving a write in the page records a dry-run in the browser tab. It does not create a ticket or post a message.
+
+Live mode is optional and off unless `ELH_INTEGRATIONS_MODE=live`. Credentials are read from environment variables at call time (`SERVICENOW_INSTANCE`, `SERVICENOW_TOKEN`, `PYLON_API_TOKEN`, `SALESFORCE_INSTANCE_URL`, `SALESFORCE_ACCESS_TOKEN`, `PAGERDUTY_API_TOKEN`, `SLACK_BOT_TOKEN`, `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN`). Even then, a write runs only after `approve()` and only when `ELH_INTEGRATIONS_DRY_RUN=0`. This repository is not connected to a company instance of any of these products. Field lists and the pages they come from are in [docs/integrations.md](docs/integrations.md).
+
 ## Maintainer verification
 
 These commands are optional. They check the fixtures on a machine that already has the repository. They are not required to use the hosted case.

@@ -1,0 +1,21 @@
+{
+  "sample": true,
+  "label": "Fictional Service Cloud Case retrieve. The 500 id uses the Case key prefix and is not a live org record.",
+  "body": {
+    "attributes": {
+      "type": "Case",
+      "url": "/services/data/v62.0/sobjects/Case/500SAMPLE0000001042AA"
+    },
+    "Id": "500SAMPLE0000001042AA",
+    "CaseNumber": "00010420",
+    "Subject": "Example Privacy Team assessment draft missing before rollout",
+    "Description": "Support rebuilt the template from the worksheet. The customer accepted the rollout outcome.",
+    "Status": "Escalated",
+    "Priority": "High",
+    "Origin": "Phone",
+    "AccountId": "001SAMPLEACCOUNT",
+    "OwnerId": "005SAMPLEOWNER",
+    "IsClosed": false,
+    "CreatedDate": "2026-04-02T15:20:11.000+0000"
+  }
+}

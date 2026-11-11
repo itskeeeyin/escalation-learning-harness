@@ -1,0 +1,27 @@
+{
+  "sample": true,
+  "label": "Fictional GET /incidents/{id}/log_entries timeline. Not from a PagerDuty account.",
+  "body": {
+    "log_entries": [
+      {
+        "id": "QLOGTRIGGER",
+        "type": "trigger_log_entry",
+        "created_at": "2026-04-02T15:04:00Z",
+        "summary": "Triggered through the sample events API.",
+        "html_url": "https://example.pagerduty.com/incidents/1042/log_entries/QLOGTRIGGER"
+      },
+      {
+        "id": "QLOGACK",
+        "type": "acknowledge_log_entry",
+        "created_at": "2026-04-02T15:06:12Z",
+        "summary": "Acknowledged by the sample on-call engineer."
+      },
+      {
+        "id": "QLOGNOTE",
+        "type": "annotate_log_entry",
+        "created_at": "2026-04-02T15:11:40Z",
+        "summary": "Note added: Slack thread opened in the sample incident channel."
+      }
+    ]
+  }
+}

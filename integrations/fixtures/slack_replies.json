@@ -1,0 +1,35 @@
+{
+  "sample": true,
+  "label": "Fictional conversations.replies payload for one incident channel. Not from a Slack workspace.",
+  "body": {
+    "ok": true,
+    "channel": "C0SAMPLEINC",
+    "messages": [
+      {
+        "type": "message",
+        "user": "U0SAMPLEONCALL",
+        "text": "PagerDuty 1042: Example Privacy Team cannot find the assessment draft before rollout.",
+        "ts": "1743606240.000100",
+        "reply_count": 2,
+        "thread_ts": "1743606240.000100"
+      },
+      {
+        "type": "message",
+        "user": "U0SAMPLESUPPORT",
+        "text": "Audit log shows a discard on that draft id. Opening the ServiceNow incident and the customer case.",
+        "ts": "1743606600.000200",
+        "thread_ts": "1743606240.000100",
+        "parent_user_id": "U0SAMPLEONCALL"
+      },
+      {
+        "type": "message",
+        "user": "U0SAMPLECS",
+        "text": "Customer accepted a rebuild from the worksheet. Learning record stays open.",
+        "ts": "1743610200.000300",
+        "thread_ts": "1743606240.000100",
+        "parent_user_id": "U0SAMPLEONCALL"
+      }
+    ],
+    "has_more": false
+  }
+}

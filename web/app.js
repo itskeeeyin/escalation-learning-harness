@@ -235,3 +235,39 @@ app.addEventListener("click", event => {
 });
 
 request();
+loadToolReplay();
+
+const toolNames = {
+  pagerduty: "PagerDuty", slack: "Slack", servicenow: "ServiceNow",
+  salesforce: "Salesforce", pylon: "Pylon", harness: "Harness", jira: "Jira",
+};
+
+async function loadToolReplay() {
+  const panel = document.querySelector("#tool-replay");
+  if (!panel) return;
+  try {
+    const response = await fetch(new URL("integrations-replay.json", document.baseURI));
+    if (!response.ok) return;
+    const replay = await response.json();
+    if (!replay.sample) return;
+    drawToolReplay(panel, replay);
+  } catch {
+    // The practice case still runs when the sample replay file is absent.
+  }
+}
+
+function drawToolReplay(panel, replay) {
+  panel.hidden = false;
+  const steps = replay.steps.map(step => `<li class="tool-row"><span class="tool-name">${escape(toolNames[step.tool] || step.tool)}</span><div><strong>${escape(step.label)}</strong><p>${escape(step.title)}</p>${step.detail ? `<p class="sub muted">${escape(step.detail)}</p>` : ""}</div><span class="status">${escape(step.status)}</span></li>`).join("");
+  const proposals = replay.proposals.map(item => `<li class="action" data-proposal="${escape(item.proposal_id)}"><div class="row"><h3>${escape(toolNames[item.tool] || item.tool)}</h3><span class="status pending">Proposed</span></div><p>${escape(item.summary)}</p><div class="controls"><button type="button" data-approve="${escape(item.proposal_id)}">Approve dry-run</button></div><p class="sub muted receipt"></p></li>`).join("");
+  panel.innerHTML = `<div class="label">SAMPLE TOOL REPLAY · OFFLINE</div><h2>Same escalation, several systems of record</h2><p>${escape(replay.summary)}</p><ol class="clean">${steps}</ol><div class="actions">${proposals}</div>`;
+  panel.addEventListener("click", event => {
+    const button = event.target.closest("button[data-approve]");
+    if (!button) return;
+    const card = button.closest("[data-proposal]");
+    card.querySelector(".status").textContent = "Dry run";
+    card.querySelector(".status").classList.remove("pending");
+    card.querySelector(".receipt").textContent = "Approved by the escalation manager in this browser. The request body stays local and is not sent.";
+    button.disabled = true;
+  });
+}
