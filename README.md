@@ -47,7 +47,7 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 
 ## Tool adapters
 
-The same fictional case can be replayed from labeled sample payloads for PagerDuty, Slack, ServiceNow, Salesforce, and Pylon. Lessons for Engineering, Product, and Customer Success become proposed Jira tasks, a Slack status post, and a ServiceNow work note. Those writes stay proposed until a person approves them, and execution is a dry run unless live mode is set on purpose.
+The same fictional case can be replayed from labeled sample payloads for PagerDuty, Slack, ServiceNow, Salesforce, and Pylon. Inbound adapters parse those documented API shapes from fixtures. Live reads are not built yet. Lessons for Engineering, Product, and Customer Success become proposed Jira tasks, a Slack status post, and a ServiceNow work note. Those writes stay proposed until a person approves them. A live send for Jira, Slack, or ServiceNow uses environment variables only after that approval, and the default is a dry run.
 
 ![Sample tool replay with inbound fixtures, the learning record, and proposed writes](docs/images/integrations.svg)
 

@@ -1,6 +1,6 @@
 # Tool adapters
 
-The learning harness can read escalation signals from the systems a support organization already uses, and it can propose follow-up writes back to those systems. The default path is offline. CI and the hosted demo load labeled sample payloads from [integrations/fixtures](../integrations/fixtures). They do not call ServiceNow, Pylon, Salesforce, Jira, PagerDuty, or Slack.
+Inbound adapters parse documented API shapes from labeled fixtures. They do not read a live PagerDuty, Slack, ServiceNow, Salesforce, or Pylon account. The harness can propose follow-up writes. CI and the hosted demo load those fixtures from [integrations/fixtures](../integrations/fixtures). They do not call ServiceNow, Pylon, Salesforce, Jira, PagerDuty, or Slack.
 
 ![Sample tool replay: inbound fixtures, the learning record, and proposed writes](images/integrations.svg)
 
@@ -42,9 +42,9 @@ The replay approves only the Engineering Jira task and then dry-runs it. The dry
 
 The browser page [web/integrations.html](../web/integrations.html) renders that replay. From a checkout, `python3 serve.py` serves it at [127.0.0.1:8796/integrations.html](http://127.0.0.1:8796/integrations.html). The hosted build copies the same page next to the practice case. The page has no credentials and no send button.
 
-## Live mode
+## Live sends
 
-Set `INTEGRATIONS_MODE=live` and provide only the variables for the call you intend to make. The process reads them from the environment. Do not commit them.
+Live reads are not built. There is no client that lists PagerDuty incidents, queries Salesforce, or searches Pylon. Set `INTEGRATIONS_MODE=live` only for a send to Jira, Slack, or ServiceNow, and provide only the variables that send needs. The process reads them from the environment. Do not commit them.
 
 | Call | Variables |
 | --- | --- |
@@ -54,4 +54,4 @@ Set `INTEGRATIONS_MODE=live` and provide only the variables for the call you int
 
 A write still has to be approved first (`state` moves from `proposed` to `approved`). Execution defaults to `dry_run=True`. `dry_run=False` while mode is `offline` returns status `refused` and does not open a socket. CI does not set `INTEGRATIONS_MODE=live`.
 
-Inbound live reads (listing PagerDuty incidents, querying Salesforce, searching Pylon) are not implemented. The adapters parse the documented response shapes from fixtures. Adding a live read later should use the same environment-variable rule and stay out of CI.
+The adapters parse the documented response shapes from fixtures. A future live read should use environment variables the same way and stay out of CI.
