@@ -1,0 +1,23 @@
+{
+  "_sample": true,
+  "_note": "Synthetic Table API incident. Not from a ServiceNow instance.",
+  "result": {
+    "sys_id": "a1b2c3d4e5f6478990abcdeffedcba98",
+    "number": "INC0011042",
+    "short_description": "Assessment draft discarded before rollout",
+    "description": "Example Privacy Team lost an in-progress assessment template after confirming Discard. Support rebuilt the template from the worksheet.",
+    "state": "6",
+    "incident_state": "6",
+    "priority": "2",
+    "impact": "2",
+    "urgency": "1",
+    "opened_at": "2026-04-02 15:12:00",
+    "caller_id": {
+      "link": "https://example.service-now.com/api/now/table/sys_user/caller-sample",
+      "value": "caller-sample",
+      "display_value": "Example Privacy Team"
+    },
+    "close_code": "Solution provided",
+    "close_notes": "Customer accepted the rebuilt template. Preventive work is tracked on the problem record."
+  }
+}

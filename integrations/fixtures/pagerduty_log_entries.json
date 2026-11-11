@@ -1,0 +1,27 @@
+{
+  "_sample": true,
+  "_note": "Synthetic log entries for one sample incident. Not from a PagerDuty account.",
+  "log_entries": [
+    {
+      "id": "R0TRIGGER",
+      "type": "trigger_log_entry",
+      "summary": "Triggered through the assessment template monitor.",
+      "created_at": "2026-04-02T15:04:00Z",
+      "incident": {"id": "Q0SAMPLEINCIDENT", "type": "incident_reference"}
+    },
+    {
+      "id": "R0ACK",
+      "type": "acknowledge_log_entry",
+      "summary": "Acknowledged by the on-call escalation manager.",
+      "created_at": "2026-04-02T15:11:00Z",
+      "incident": {"id": "Q0SAMPLEINCIDENT", "type": "incident_reference"}
+    },
+    {
+      "id": "R0RESOLVE",
+      "type": "resolve_log_entry",
+      "summary": "Resolved after the customer accepted the rebuilt template.",
+      "created_at": "2026-04-02T18:40:00Z",
+      "incident": {"id": "Q0SAMPLEINCIDENT", "type": "incident_reference"}
+    }
+  ]
+}

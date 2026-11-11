@@ -8,7 +8,8 @@ from http.cookies import SimpleCookie
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
-from harness import Harness, ReviewError
+from harness import DATA, Harness, ReviewError
+from integrations.replay import cross_tool_replay
 
 DIST = Path(__file__).with_name("web")
 MAX_SESSIONS = 128
@@ -49,7 +50,9 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path == "/api/session":
             session, token = self._session(create=True)
             self._json(session.view(), token=token)
-        elif self.path == "/" or self.path in {"/style.css", "/app.js"}:
+        elif self.path == "/integrations.json":
+            self._json(cross_tool_replay(DATA["actions"]))
+        elif self.path.split("?", 1)[0] in {"/", "/style.css", "/app.js", "/integrations.html"}:
             super().do_GET()
         else:
             self.send_error(404)

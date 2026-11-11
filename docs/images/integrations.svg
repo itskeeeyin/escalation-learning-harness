@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="title description">
+<title id="title">Sample tool replay</title>
+<desc id="description">Offline fixtures flow into the learning record. Writes stay proposed until a person approves them.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#5a6680"/></marker></defs>
+<style>
+text{font-family:Inter,Arial,sans-serif}.title{font-size:36px;font-weight:700;fill:#1b2333}.subtitle{font-size:18px;fill:#46526b}.label{font-size:13px;font-weight:700;letter-spacing:1.4px;fill:#56647e}.cardTitle{font-size:18px;font-weight:700}.body{font-size:15px;fill:#46526b}
+</style>
+<rect width="1200" height="640" fill="#f6f7fb"/>
+<text x="40" y="58" class="title">Sample tool replay</text>
+<text x="40" y="90" class="subtitle">Labeled fixtures only. No company instance is connected in the default mode.</text>
+<text x="40" y="138" class="label">SIGNALS IN</text>
+<text x="430" y="138" class="label">LEARNING RECORD</text>
+<text x="860" y="138" class="label">PROPOSED WRITES</text>
+<rect x="40" y="156" width="340" height="360" rx="16" fill="#e7f5ff" stroke="#339af0" stroke-width="2"/>
+<g fill="#1864ab"><text x="58" y="190" class="cardTitle">Inbound adapters</text></g>
+<text x="58" y="222" class="body">PagerDuty incident and timeline</text>
+<text x="58" y="248" class="body">Slack incident-channel thread</text>
+<text x="58" y="274" class="body">ServiceNow incident and problem</text>
+<text x="58" y="300" class="body">Salesforce Case</text>
+<text x="58" y="326" class="body">Pylon issue and account</text>
+<text x="58" y="368" class="body">Each payload is marked _sample.</text>
+<text x="58" y="394" class="body">Fields follow the public API shape.</text>
+<text x="58" y="470" class="body">Live reads are optional and use</text>
+<text x="58" y="494" class="body">environment variables only.</text>
+<rect x="430" y="156" width="380" height="360" rx="16" fill="#fff9db" stroke="#f0a000" stroke-width="2"/>
+<g fill="#876000"><text x="448" y="190" class="cardTitle">Harness lesson</text></g>
+<text x="448" y="222" class="body">Map the signals onto one case.</text>
+<text x="448" y="248" class="body">Keep the existing recovery and</text>
+<text x="448" y="274" class="body">verification rules unchanged.</text>
+<text x="448" y="316" class="body">Product, Engineering, and Customer</text>
+<text x="448" y="342" class="body">Success actions become follow-ups.</text>
+<text x="448" y="384" class="body">A person approves a write before</text>
+<text x="448" y="410" class="body">any adapter may send it.</text>
+<rect x="860" y="156" width="300" height="360" rx="16" fill="#e8faf7" stroke="#129488" stroke-width="2"/>
+<g fill="#0c6e66"><text x="878" y="190" class="cardTitle">Still proposed</text></g>
+<text x="878" y="222" class="body">Jira action-item tasks</text>
+<text x="878" y="248" class="body">Slack thread status post</text>
+<text x="878" y="274" class="body">ServiceNow work note</text>
+<text x="878" y="316" class="body">Default execution is a dry run.</text>
+<text x="878" y="342" class="body">Offline mode refuses the network.</text>
+<text x="878" y="384" class="body">CI uses the fixtures only.</text>
+<path d="M380 336L426 336" fill="none" stroke="#5a6680" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M810 336L856 336" fill="none" stroke="#5a6680" stroke-width="2.4" marker-end="url(#arrow)"/>
+<rect x="40" y="540" width="1120" height="72" rx="16" fill="#fff4e0" stroke="#e67700" stroke-width="2"/>
+<g fill="#a84e00"><text x="58" y="572" class="cardTitle">Human approval</text></g>
+<text x="58" y="596" class="body">Proposed, then approved, then dry-run. A live send is a separate choice and is not part of the demo or CI.</text>
+</svg>

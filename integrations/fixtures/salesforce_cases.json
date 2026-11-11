@@ -1,0 +1,23 @@
+{
+  "_sample": true,
+  "_note": "Synthetic SOQL Case query. Not from a Salesforce org. AccountId is a placeholder.",
+  "totalSize": 1,
+  "done": true,
+  "records": [
+    {
+      "attributes": {
+        "type": "Case",
+        "url": "/services/data/v62.0/sobjects/Case/500SAMPLE0000001042"
+      },
+      "Id": "500SAMPLE0000001042",
+      "CaseNumber": "00001042",
+      "Subject": "Missing assessment draft before rollout",
+      "Description": "Example Privacy Team cannot launch because the in-progress template was discarded. Support validated 18 questions and both routing paths on the rebuild.",
+      "Status": "Closed",
+      "Priority": "High",
+      "Origin": "Phone",
+      "AccountId": "001SAMPLEACCOUNT",
+      "CreatedDate": "2026-04-02T15:20:00.000+0000"
+    }
+  ]
+}
