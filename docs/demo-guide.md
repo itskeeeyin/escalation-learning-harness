@@ -1,4 +1,4 @@
-# Demo rehearsal
+# Demo walkthrough
 
 ## 1. Establish impact
 
@@ -28,7 +28,7 @@ In the 30-day review, load **Report A** and keep it separate. A published templa
 
 ## 7. Read whether it held
 
-The **Measure** step shows the scorecard again. The Engineering lesson is verified, and the repeat is still 1. Template authoring includes that extra escalation. The routing board shows where each lesson went, and the team section shows acceptance, time to accept, time to implement, verified share, and repeats. This case has no field tool. Solutions architects, data center and hardware operations, and field engineers are marked example quarter. The systems list is an example of reading those fields from tools a company already uses. It is not a live connection. **Export JSON** includes `owner_type`, `action_type`, `lifecycle`, the accepted link, the routed, implemented, and shipped dates, and `recurrence` on each lesson.
+The **Measure** step shows the scorecard again. The Engineering lesson is verified, and the repeat is still 1. Template authoring includes that extra escalation. The routing board shows where each lesson went, and the team section shows acceptance, time to accept, time to implement, verified share, and repeats. This case has no field tool, Customer Success playbook, or TAM review. Solutions architects, data center and hardware operations, field engineers, Customer Success, and technical account managers are marked example quarter. The systems list is an example of reading those fields from tools a company already uses. It is not a live connection. **Export JSON** includes `owner_type`, `action_type`, `lifecycle`, the accepted link, the routed, implemented, and shipped dates, and `recurrence` on each lesson.
 
 ## Alternate case
 
@@ -36,10 +36,6 @@ Restart and select **Try the launch-picker case**. Inspect the publish and filte
 
 ![Demo paused after customer recovery with seven assigned follow-ups awaiting verification](images/demo-preview.png)
 
-## Suggested opening
+## What this walkthrough shows
 
-> This is a fictional assessment-template escalation. I’ll show how the escalation manager restores the customer’s rollout, then keeps the learning work open until the teams can show what changed.
-
-## Suggested close
-
-> The same evidence explains the customer outcome, the product issue, and the work each team owns. The scorecard then asks whether that work held: the baseline, the change, how it is measured, and whether it held. The figures on this page are an example. In a pilot I would build the baseline with the people who hold the history, and I would reopen a lesson when the same mechanism comes back.
+The same evidence explains the customer outcome, the product issue, and the work each team owns. The scorecard asks whether that work held: the baseline, the change, how it is measured, and whether it held. The figures on the page are an example. A baseline comes from the people who hold the history. A lesson reopens when the same mechanism comes back.

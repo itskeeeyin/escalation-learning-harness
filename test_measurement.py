@@ -93,8 +93,8 @@ class ScorecardTests(unittest.TestCase):
             {lesson["owner_type"] for lesson in lessons.values()},
             {"Engineering", "Support", "Product management"},
         )
-        self.assertEqual(metric(scorecard, "lessons_closed")["current"], "9")
-        self.assertEqual(metric(scorecard, "lessons_closed")["baseline"], "6 per quarter")
+        self.assertEqual(metric(scorecard, "lessons_closed")["current"], "11")
+        self.assertEqual(metric(scorecard, "lessons_closed")["baseline"], "8 per quarter")
         self.assertEqual(metric(scorecard, "shipped_changes")["current"], "2")
         self.assertEqual(metric(scorecard, "training_published")["current"], "2")
         self.assertEqual(metric(scorecard, "tools_adopted")["current"], "1")
@@ -149,7 +149,7 @@ class ScorecardTests(unittest.TestCase):
         scorecard = harness.view()["scorecard"]
         self.assertFalse(scorecard["repeat_held"])
         self.assertEqual(scorecard["repeat_count"], 1)
-        self.assertEqual(metric(scorecard, "lessons_closed")["current"], "8")
+        self.assertEqual(metric(scorecard, "lessons_closed")["current"], "10")
         self.assertEqual(metric(scorecard, "shipped_changes")["current"], "2")
         self.assertEqual(metric(scorecard, "escalation_rate")["areas"][0]["current_value"], 1.25)
         self.assertIn("reopened", scorecard["status_note"])
@@ -171,7 +171,7 @@ class ScorecardTests(unittest.TestCase):
         self.assertEqual(closed["shipped_on"], "2026-12-16")
         self.assertEqual(closed["first_verified_on"], "2026-11-18")
         self.assertFalse(harness.view()["scorecard"]["repeat_held"])
-        self.assertEqual(metric(harness.view()["scorecard"], "lessons_closed")["current"], "9")
+        self.assertEqual(metric(harness.view()["scorecard"], "lessons_closed")["current"], "11")
 
     def test_a_missed_citation_or_approval_does_not_hold(self):
         live = self.walk().view()["lessons"]
@@ -214,6 +214,26 @@ class ScorecardTests(unittest.TestCase):
         for record in SYSTEMS["records"].values():
             self.assertIn("system", record)
             self.assertIn("fields", record)
+
+    def test_account_teams_are_example_quarter_lessons(self):
+        scorecard = self.walk().view()["scorecard"]
+        owners = {owner["owner_type"]: owner for owner in scorecard["owners"]}
+        live = {lesson["owner_type"] for lesson in scorecard["inputs"]["lessons"] if lesson["scope"] == "practice_case"}
+        self.assertNotIn("Customer Success", live)
+        self.assertNotIn("Technical Account Managers (including Strategic TAMs)", live)
+        success = owners["Customer Success"]
+        managers = owners["Technical Account Managers (including Strategic TAMs)"]
+        self.assertIn("CSM lead", success["blurb"])
+        self.assertIn("TAM manager", managers["blurb"])
+        self.assertIn("renewal-risk", success["blurb"])
+        self.assertIn("QBR", managers["blurb"])
+        for owner in (success, managers):
+            self.assertTrue(owner["lessons"])
+            self.assertTrue(all(lesson["scope_label"] == "Example quarter" for lesson in owner["lessons"]))
+        mapped = {team["name"]: team for team in SYSTEMS["owner_teams"]}
+        self.assertEqual(mapped["Customer Success"]["accepts_in"], "Salesforce")
+        self.assertEqual(mapped["Technical Account Managers (including Strategic TAMs)"]["accepts_in"], "Salesforce")
+        self.assertIn("success_plan", {row["id"] for row in scorecard["systems"]["rows"]})
 
     def test_launch_picker_case_is_not_a_draft_discard_lesson(self):
         harness = Harness()

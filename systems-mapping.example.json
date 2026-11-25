@@ -98,6 +98,20 @@
         "name": "Account.Name"
       }
     },
+    "success_plan": {
+      "label": "Success plan",
+      "system": "Salesforce",
+      "object": "Task on the account, or a success-plan record",
+      "fields": {
+        "id": "Task.Id",
+        "account": "Task.WhatId",
+        "opportunity": "Task.WhatId when the renewal is an opportunity",
+        "implemented_on": "Task.CompletedDateTime",
+        "verified_by": "Task custom field for the CSM lead or TAM manager",
+        "link_back": "Task description storing the lesson id"
+      },
+      "note": "Customer Success and technical account managers, including strategic TAMs, accept the lesson here. The example system is a CRM. Any CRM that already stores accounts, opportunities, and tasks can hold the same fields."
+    },
     "public_incident": {
       "label": "Public incident",
       "system": "Statuspage",
@@ -129,6 +143,16 @@
       "name": "Support",
       "accepts_in": "Zendesk",
       "record": "A follow-up ticket the support lead accepts, linked back to the lesson id"
+    },
+    {
+      "name": "Customer Success",
+      "accepts_in": "Salesforce",
+      "record": "A success-plan task on the account: health or playbook update, outreach to affected customers, and a renewal-risk note. The CSM lead verifies it."
+    },
+    {
+      "name": "Technical Account Managers (including Strategic TAMs)",
+      "accepts_in": "Salesforce",
+      "record": "A success-plan task on the account, linked to the opportunity when a renewal is open: customer-specific runbook or architecture review, a check across their accounts, and a QBR follow-up. The TAM manager verifies it. Strategic accounts use the same record."
     },
     {
       "name": "Solutions Architects",

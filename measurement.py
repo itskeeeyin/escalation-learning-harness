@@ -28,6 +28,8 @@ RECORD_FIELDS = (
 )
 OWNERS = (
     ("Support", "Training for the gap, and a runbook the support team can rehearse."),
+    ("Customer Success", "An account-health or playbook update, outreach to affected customers, and a renewal-risk note. The CSM lead verifies it."),
+    ("Technical Account Managers (including Strategic TAMs)", "A customer-specific runbook or architecture review, a check across their accounts, and a QBR follow-up. The TAM manager verifies it. Strategic accounts are included."),
     ("Solutions Architects", "A solution pattern the account team can apply on the next design."),
     ("Data center / hardware operations", "A check or procedure so the same hardware fault is caught before customers see it."),
     ("Product management", "A clearer warning, screen, or guide."),
@@ -37,6 +39,7 @@ OWNERS = (
 OUTCOME_WORD = {
     "defect": "Shipped", "architecture": "Shipped", "training": "Published",
     "tool": "Adopted", "docs": "Shipped", "design": "Published", "operations": "In place",
+    "playbook": "Updated", "account_review": "Reviewed",
 }
 
 
@@ -601,7 +604,7 @@ def build_scorecard(live_lessons, config=None):
             "method_steps": config["method_steps"],
             "messy_data": config["messy_data"],
             "definitions": config["definitions"],
-            "interviews": config["interviews"],
+            "conversations": config["conversations"],
             "quarters": quarters,
         },
         "inputs": inputs,
@@ -701,7 +704,7 @@ def _team_cards(rows):
 def _systems_view(mapping=None):
     mapping = mapping or SYSTEMS
     rows = []
-    for key in (*RECORD_FIELDS, "account_context", "public_incident", "scorecard"):
+    for key in (*RECORD_FIELDS, "account_context", "public_incident", "success_plan", "scorecard"):
         record = mapping["records"][key]
         rows.append({
             "id": key,
