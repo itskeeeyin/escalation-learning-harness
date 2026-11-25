@@ -1,0 +1,159 @@
+{
+  "example": true,
+  "disclaimer": "Synthetic example of how to read an influence scorecard from tools an organization already uses. It does not name a target organization, and it is not a map of any real company's stack.",
+  "principle": "The measurement model does not add a system of record. Each field below is read from a system the organization already has. The names here are one common stack. Swap them for the systems actually in use.",
+  "lifecycle": ["created", "routed", "accepted", "implemented", "verified", "held"],
+  "reopened_status": "reopened",
+  "hold_days": 30,
+  "hold_rule": "Held means the lesson is verified and the same confirmed mechanism has not come back for the hold window. A recurrence sets the status back to reopened. The repeat stays counted.",
+  "records": {
+    "escalation_ticket": {
+      "label": "Escalation ticket",
+      "system": "Zendesk",
+      "object": "Ticket",
+      "fields": {
+        "id": "ticket.id",
+        "created_on": "ticket.created_at",
+        "product_area": "ticket.custom_fields.product_area",
+        "root_cause_tag": "ticket.tags"
+      }
+    },
+    "engineering_issue": {
+      "label": "Engineering issue",
+      "system": "Jira",
+      "object": "Issue in the ENG project",
+      "fields": {
+        "id": "issue.key",
+        "implemented_on": "issue.resolutiondate",
+        "link_back": "issue link to the lesson issue"
+      }
+    },
+    "lesson_record": {
+      "label": "Lesson record",
+      "system": "Jira",
+      "object": "Issue in the LESSON project",
+      "fields": {
+        "id": "issue.key",
+        "owner_team": "issue.customfield_owner_team",
+        "lifecycle_status": "issue.status.name",
+        "routed_on": "issue.customfield_routed_on",
+        "accepted_on": "issue.customfield_accepted_on",
+        "implemented_on": "issue.customfield_implemented_on",
+        "verified_on": "issue.customfield_verified_on",
+        "root_cause_tag": "issue.labels",
+        "recurrence_flag": "issue.customfield_recurrence"
+      }
+    },
+    "root_cause_tag": {
+      "label": "Root-cause tag",
+      "system": "Zendesk",
+      "object": "Ticket tag, copied onto the Jira lesson label",
+      "fields": {
+        "source": "ticket.tags",
+        "copy": "LESSON issue.labels"
+      }
+    },
+    "owner_team": {
+      "label": "Owner team",
+      "system": "Jira",
+      "object": "Custom field on the lesson issue",
+      "fields": {
+        "value": "issue.customfield_owner_team"
+      }
+    },
+    "lifecycle_status": {
+      "label": "Lifecycle status",
+      "system": "Jira",
+      "object": "Status on the lesson issue",
+      "fields": {
+        "value": "issue.status.name"
+      }
+    },
+    "required_links": {
+      "label": "Required links",
+      "system": "Jira",
+      "object": "Issue link on the lesson issue",
+      "fields": {
+        "lesson_to_ticket": "Remote link storing the Zendesk ticket id",
+        "lesson_to_owner_record": "Issue link to the record in the owner team's project",
+        "ticket_to_account": "Zendesk organization external id matching the Salesforce account id"
+      },
+      "rule": "Accepted is not counted until the lesson links back to the escalation ticket and to the record in the owner team's own system."
+    },
+    "recurrence_flag": {
+      "label": "Recurrence flag",
+      "system": "Jira",
+      "object": "Checkbox on the lesson issue",
+      "fields": {
+        "recurrence": "issue.customfield_recurrence",
+        "repeat_count": "issue.customfield_repeat_count"
+      }
+    },
+    "account_context": {
+      "label": "Account context",
+      "system": "Salesforce",
+      "object": "Account",
+      "fields": {
+        "id": "Account.Id",
+        "name": "Account.Name"
+      }
+    },
+    "public_incident": {
+      "label": "Public incident",
+      "system": "Statuspage",
+      "object": "Incident",
+      "fields": {
+        "id": "incident.id",
+        "link": "incident.shortlink"
+      },
+      "note": "Only when the escalation is also a public incident. This practice case is not one."
+    },
+    "scorecard": {
+      "label": "Scorecard",
+      "system": "Spreadsheet or BI tool",
+      "object": "One row per lesson, and one model for the scorecard",
+      "fields": {
+        "lesson_id": "lesson id",
+        "owner_team": "owner team",
+        "lifecycle_status": "lifecycle status",
+        "accepted_on": "accepted on",
+        "implemented_on": "implemented on",
+        "verified_on": "verified on",
+        "recurrence_flag": "recurrence flag"
+      },
+      "note": "The scorecard is a view over those rows. It is not a new system of record."
+    }
+  },
+  "owner_teams": [
+    {
+      "name": "Support",
+      "accepts_in": "Zendesk",
+      "record": "A follow-up ticket the support lead accepts, linked back to the lesson id"
+    },
+    {
+      "name": "Solutions Architects",
+      "accepts_in": "Jira",
+      "record": "A lesson issue accepted in the solutions project, linked back to the LESSON issue"
+    },
+    {
+      "name": "Data center / hardware operations",
+      "accepts_in": "Jira",
+      "record": "A lesson issue accepted in the hardware project, linked back to the LESSON issue"
+    },
+    {
+      "name": "Product management",
+      "accepts_in": "Jira",
+      "record": "A lesson issue accepted in the product project, linked back to the LESSON issue"
+    },
+    {
+      "name": "Field / professional services engineers",
+      "accepts_in": "Jira",
+      "record": "A lesson issue accepted in the field project, linked back to the LESSON issue"
+    },
+    {
+      "name": "Engineering",
+      "accepts_in": "Jira",
+      "record": "An ENG issue linked to the LESSON issue"
+    }
+  ]
+}

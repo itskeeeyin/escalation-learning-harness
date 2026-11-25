@@ -15,7 +15,8 @@ The demo replays a fictional assessment-template discard and a separate launch-p
 3. **Confirm recovery.** Replay Support's rebuild validation and the customer's acceptance. The customer moves to **Recovered** while learning stays **Open**.
 4. **Learn.** Run the RCA, recurrence, and routing stages. Two prior confirmed discard cases match. A similar launch-picker report is excluded because its mechanism is unverified.
 5. **Verify.** Return Engineering’s incomplete submission, replay revised evidence, and verify the actions before executive sign-off.
-6. **Review recurrence.** Load both reports after closure. Keep the filter issue separate, then reopen preventive work for a confirmed repeat. Verify revised Engineering proof and executive sign-off again. **Export JSON** saves the decision record.
+6. **Review recurrence.** Load both reports after closure. Keep the filter issue separate, then reopen preventive work for a confirmed repeat. Verify revised Engineering proof and executive sign-off again.
+7. **Measure.** Read the influence scorecard. It compares an example baseline with this practice quarter, including acceptance, implementation, verification, and repeats for each owner team. Confirming the repeat moves the closed-lesson target off zero, and verifying the revised proof does not erase it. **Export JSON** saves the decision record, including the lesson lifecycle and where it was routed.
 
 [Open a screenshot of the live demo](docs/images/demo-preview.png) · [Read the rehearsal guide](docs/demo-guide.md)
 
@@ -32,6 +33,14 @@ The demo replays a fictional assessment-template discard and a separate launch-p
 | Executive leadership | Review residual risk after team verification and set the next review |
 
 The escalation manager owns the case, confirms priority and recovery, approves the follow-up plan, and closes the learning record. Each action carries an owner, due date, evidence references, and an acceptance criterion. See the [roles and decisions visual](docs/images/main-players.svg).
+
+## How influence is measured
+
+![A lesson moves from created to held, and is routed to one of six owner teams. The scorecard compares a baseline with what changed.](docs/images/measuring-influence.svg)
+
+After the learning record closes, the Measure step opens an influence scorecard. Four of the follow-ups are lessons on this case: Engineering, Support, and Product management. Solutions architects, data center and hardware operations, and field engineers appear in the example quarter so those teams are visible. Customer Success, Operations, and executive sign-off stay on the case as acceptance, measurement, and residual-risk review. The scorecard compares this example quarter with a baseline from three earlier example quarters, and reads each team for acceptance, time to accept, time to implement, verified share, and repeats. Every figure is synthetic. A repeat reopens the lesson, and the repeat still counts after the revised proof is verified.
+
+[How influence is measured](docs/measuring-influence.md) covers the lifecycle, the routing, the three metric groups, the 30–60 day baseline, and an [example systems mapping](systems-mapping.example.json) for reading the same fields from tools an organization already uses. That mapping names a common stack. It does not name a target organization. A planned handoff of verified lessons into Runbook Copilot is described there and is not built.
 
 ## Benefits and boundaries
 

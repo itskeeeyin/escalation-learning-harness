@@ -36,7 +36,9 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | [harness.py](../harness.py) | Recovery, recurrence, routing, action verification, and closure rules |
 | [scenario.json](../scenario.json) | Synthetic history, recovery evidence, team catalog, and completion evidence |
 | [serve.py](../serve.py) | Local HTTP interface and in-memory browser sessions |
-| [web/](../web/) | Replay UI, evidence viewer, executive brief, and JSON export |
+| [web/](../web/) | Replay UI, evidence viewer, executive brief, influence scorecard, and JSON export |
+| [measurement.py](../measurement.py), [measurement.json](../measurement.json) | Example baseline, lesson lifecycle, routing, and scorecard math |
+| [systems-mapping.example.json](../systems-mapping.example.json) | Example of reading the same fields from tools an organization already uses. Not a live connection, and not a named company |
 | [assessment_golden.json](../assessment_golden.json), [test_harness.py](../test_harness.py), and [test_reliability.py](../test_reliability.py) | Golden assessment scenarios, workflow guards, and local HTTP failure/recovery cases |
 | [workflow_cases.json](../workflow_cases.json) and [workflow_eval.py](../workflow_eval.py) | Replay scorecard for incomplete proof, separate routing, and reopening after a confirmed repeat |
 | [integrations/](../integrations/) | Offline adapters for PagerDuty, Slack, ServiceNow, Salesforce, Pylon, and Jira. Writes stay proposed until approved. See [integrations.md](integrations.md). |
@@ -50,6 +52,8 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | Decision authority | One reviewer plays every role | Authenticate decision-makers and enforce ownership and approval roles at each gate |
 | Work tracking | Fixture-based action catalog and simulated proof | Use approved, retry-safe ticket creation and link actual changes, tests, and customer acceptance |
 | Trace and review | Session records with JSON export | Persist decision history, assign review dates, and reopen follow-up when recurrence exceeds the agreed threshold |
-| Measurement | Synthetic improvement figures and deterministic tests | Establish a baseline for time to recovery, on-time verification, and confirmed recurrences per unit of product usage |
+| Measurement | Example scorecard computed from the decision record and a fictional quarter history. See [measuring influence](measuring-influence.md). | Agree definitions, tag from day one, and compare each metric with its baseline. Read the fields from the systems already in use. See [systems-mapping.example.json](../systems-mapping.example.json). |
+
+A verified training lesson is planned to open a reviewed runbook pull request, with new eval questions for the confirmed mechanism and for the near miss that must stay excluded. [Measuring influence](measuring-influence.md) describes that path. It is not built.
 
 The prototype uses no live model, CRM, messaging, ticketing, or production telemetry. In the hosted demo, a reload preserves progress in the same tab. Restart practice case clears the current replay. The local Python server clears its sessions on restart. The recurrence review is recorded as a commitment, and follow-up actions are simulated. A pilot would first compare the model and rules against human-reviewed cases and agree on who can approve each transition.
