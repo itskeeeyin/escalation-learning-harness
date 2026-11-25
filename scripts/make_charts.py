@@ -375,7 +375,6 @@ QUADRANT_LABELS = {
 
 
 def chart_quadrant(data, plt):
-    import matplotlib.patheffects as path_effects
     fig, ax = plt.subplots(figsize=(16, 9))
     fig.subplots_adjust(left=0.07, right=0.78, top=0.86, bottom=0.12)
     ax.set_xlim(-0.25, 11.2)
@@ -395,7 +394,6 @@ def chart_quadrant(data, plt):
             x, y, text, ha="center", va=valign, fontsize=10.5, color=color,
             fontweight="bold", linespacing=1.35,
         )
-    halo = [path_effects.withStroke(linewidth=3, foreground=PANEL)]
     for lesson in data["lessons"]:
         effort = lesson["effort"]
         impact = lesson["impact"]
@@ -417,13 +415,12 @@ def chart_quadrant(data, plt):
         else:
             label = lesson["short_name"]
         place = QUADRANT_LABELS.get(lesson["short_name"], {})
-        note = ax.annotate(
+        ax.annotate(
             label, (effort, impact),
             xytext=place.get("xytext", (0, 0)), textcoords="offset points",
             ha=place.get("ha", "center"), va=place.get("va", "center"),
             fontsize=8.4, color=FG, zorder=4, linespacing=1.15, clip_on=False,
         )
-        note.set_path_effects(halo)
     ax.set_xlabel("Effort / complexity to implement (1 = small change, 10 = architecture work)")
     ax.set_ylabel("Customer impact (repeat escalations per quarter if not fixed)")
     for side in ("top", "right"):
