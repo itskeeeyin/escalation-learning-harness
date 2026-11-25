@@ -1,4 +1,4 @@
-const storageKey = "escalation-learning-demo:v2";
+const storageKey = "escalation-learning-demo:v3";
 const fresh = (revision = 0) => ({node: 0, revision, version: 0, audit: [], reviews: []});
 let graphPromise;
 let session;

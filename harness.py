@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from command_center.workflow import FACTS, INCIDENTS, ReviewError, Session
+from measurement import DATE_INPUTS, apply_lifecycle, build_scorecard, lesson_records
 
 DATA = json.loads(Path(__file__).with_name("scenario.json").read_text(encoding="utf-8"))
 CASE_ID = "ESC-1042"
@@ -207,6 +208,12 @@ class Harness:
             raise ReviewError("Unknown workflow action.")
         self.revision += 1
 
+    def published_action(self, row):
+        return {
+            key: value for key, value in row.items()
+            if key not in DATE_INPUTS and (key != "proof" or self.proof_available)
+        }
+
     def picker_view(self):
         stage = self.picker_stage
         evidence_ids = ["P1"]
@@ -227,7 +234,7 @@ class Harness:
             "triage": None, "evidence": {key: DATA["evidence"][key] for key in evidence_ids},
             "recovered": stage == "Recovered", "resolution_available": stage == "Recovered",
             "proof_available": False, "actions": [], "history": [], "audit": self.audit,
-            "learning_review": None,
+            "lessons": [], "scorecard": None, "learning_review": None,
             "executive": {
                 "status": status, "priority": "Launch-picker review", "next": next_step,
                 "decision": decision, "sources": evidence_ids,
@@ -265,6 +272,7 @@ class Harness:
                 "decisions": self.signal_decisions,
                 "reopened": self.stage == "Verify",
             }
+        lessons, scorecard = self.measurement(evidence)
         return {
             "case_id": CASE_ID,
             "customer": CASE["customer"],
@@ -272,10 +280,8 @@ class Harness:
             "triage": triage, "evidence": evidence, "recovered": recovered,
             "resolution_available": self.resolution_available,
             "proof_available": self.proof_available,
-            "actions": [
-                {key: value for key, value in row.items() if key != "proof" or self.proof_available}
-                for row in self.actions.values()
-            ],
+            "actions": [self.published_action(row) for row in self.actions.values()],
+            "lessons": lessons, "scorecard": scorecard,
             "history": self.history, "audit": self.audit,
             "learning_review": review,
             "executive": {
@@ -293,3 +299,12 @@ class Harness:
                 "sources": ["R1","R2"] if recovered else ["E2","E3"] if self.triage.confirmed else ["E1"],
             },
         }
+
+    def measurement(self, evidence):
+        if not self.actions:
+            return [], None
+        lessons = apply_lifecycle(lesson_records(self.actions.values(), set(evidence)))
+        scorecard = None
+        if lessons and (self.stage == "Closed" or self.signal_decisions):
+            scorecard = build_scorecard(lessons)
+        return lessons, scorecard

@@ -1,9 +1,24 @@
 const app = document.querySelector("#app");
 const notice = document.querySelector("#notice");
 const dialog = document.querySelector("#source-dialog");
-const stages = ["Engage", "Coordinate", "Learn", "Verify", "Closed"];
+const stages = ["Engage", "Coordinate", "Learn", "Verify", "Closed", "Measure"];
+const ownerClass = {
+  "Support": "owner-sup",
+  "Solutions Architects": "owner-sa",
+  "Data center / hardware operations": "owner-dc",
+  "Product management": "owner-docs",
+  "Field / professional services engineers": "owner-field",
+  "Engineering": "owner-eng",
+};
 let view;
 let pending = false;
+let noticeTimer;
+
+const showNotice = (text) => {
+  notice.textContent = text || "";
+  clearTimeout(noticeTimer);
+  if (text) noticeTimer = setTimeout(() => { notice.textContent = ""; }, 6000);
+};
 
 const escape = (value) => String(value).replace(/[&<>"']/g, char => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -142,7 +157,7 @@ function learning() {
         ${view.stage === "Verify" && !outstanding ? button("close", "Close learning loop", true) : ""}
         ${view.stage === "Verify" && outstanding ? `<span class="sub muted">Closure locked · ${outstanding} actions await verification</span>` : ""}
       </div>
-      ${view.stage === "Closed" ? `<p class="success">Learning closed · owners verified all ${view.actions.length} actions. ${escape(view.learning_review.owner)} will review recurrence in ${view.learning_review.interval_days} days.</p>` : ""}
+      ${view.stage === "Closed" ? `<p class="success">Learning closed · owners verified all ${view.actions.length} actions. ${escape(view.learning_review.owner)} will review recurrence in ${view.learning_review.interval_days} days. The influence scorecard below is example data from this decision record.</p>` : ""}
     `}
   </section>`;
 }
@@ -166,16 +181,122 @@ function audit() {
   </section>`;
 }
 
+function lessonLine(lesson) {
+  const missed = lesson.recurrence === "reopened";
+  const quiet = lesson.status === "Verified" || lesson.status === "Held";
+  const link = lesson.accepted_link ? `<p class="sub">Link back <code class="example-link">${escape(lesson.accepted_link)}</code></p>` : "";
+  return `<li><strong>${escape(lesson.title)}</strong>
+    <p><span class="status${quiet && !missed ? "" : " pending"}">${escape(lesson.status)}</span>
+    <span class="scope-chip">${escape(lesson.scope_label)}</span> · ${escape(lesson.action_type)} · ${escape(lesson.when)}</p>${link}</li>`;
+}
+
+function teamFact(label, fact) {
+  return `<p><span class="scope-chip">${escape(label)}</span> ${escape(fact.current)} <span class="muted">baseline ${escape(fact.baseline)}</span>
+    · <span class="status${fact.held ? "" : " pending"}">${fact.held ? "Held" : "Not held"}</span></p>`;
+}
+
+function metricNumbers(metric) {
+  if (metric.areas) {
+    return `<ul class="clean">${metric.areas.map(area => `<li><strong>${escape(area.name)}</strong>
+      <p>Baseline ${escape(area.baseline)}</p>
+      <p>${escape(metric.current_caption)} ${escape(area.current)} · ${escape(area.change)}</p></li>`).join("")}</ul>`;
+  }
+  return `<dl>
+    <div><dt>Baseline</dt><dd>${escape(metric.baseline)}</dd></div>
+    <div><dt>${escape(metric.current_caption)}</dt><dd>${escape(metric.current)}</dd></div>
+    <div><dt>Change</dt><dd>${escape(metric.change)}</dd></div>
+  </dl>`;
+}
+
+function scorecardPanel(score) {
+  const owners = score.owners.map(owner => `<article class="owner-card ${ownerClass[owner.owner_type] || ""}">
+    <div class="label">${escape(owner.owner_type)}</div>
+    <p class="sub">${escape(owner.blurb)}</p>
+    ${owner.lessons.length ? `<ul class="clean">${owner.lessons.map(lessonLine).join("")}</ul>` : `<p class="sub">No lesson in this example quarter.</p>`}
+  </article>`).join("");
+  const groups = score.groups.map(group => `<section class="score-group" aria-labelledby="group-${group.id}">
+    <h3 id="group-${group.id}">${escape(group.title)}</h3>
+    <p>${escape(group.question)}</p>
+    <div class="metric-grid">${group.metrics.map(metric => `<article class="metric-card">
+      <div class="row"><p class="metric-name">${escape(metric.label)}</p>
+        <span class="statuses">${metric.example_only ? `<span class="status pending">Example figure</span>` : ""}
+        <span class="status${metric.held ? "" : " pending"}">${metric.held ? "Held" : "Not held"}</span></span></div>
+      ${metricNumbers(metric)}
+      <p class="sub"><strong>How it is measured.</strong> ${escape(metric.how)}</p>
+    </article>`).join("")}</div>
+  </section>`).join("");
+  const teams = score.teams.rows.map(team => `<article class="owner-card ${ownerClass[team.owner_type] || ""}">
+    <div class="label">${escape(team.owner_type)}</div>
+    ${teamFact("Acceptance", team.acceptance_rate)}
+    ${teamFact("Time to accept", team.time_to_accept)}
+    ${teamFact("Time to implement", team.time_to_implement)}
+    ${teamFact("Verified", team.verified_pct)}
+    ${teamFact("Repeats", team.repeats)}
+  </article>`).join("");
+  const systems = score.systems.rows.map(row => `<li><strong>${escape(row.label)}</strong> · ${escape(row.system)}<p class="sub">${escape(row.object)}</p></li>`).join("");
+  const quarters = score.baseline.quarters.map(quarter => `<article class="quarter-card">
+    <div class="label">${escape(quarter.label)}</div>
+    <p>${escape(quarter.lessons_closed)} lessons closed</p>
+    <p>${escape(quarter.repeats)} repeat${quarter.repeats === "1" ? "" : "s"}</p>
+    <p>${escape(quarter.routed_on_time)} routed on time</p>
+    <p>Template authoring ${escape(quarter.template_rate)}</p>
+  </article>`).join("");
+  return `<section class="panel scorecard" id="influence-scorecard" aria-labelledby="score-heading">
+    <div class="label">EXAMPLE DATA · NOT A TRACK RECORD</div>
+    <h2 id="score-heading">Influence scorecard</h2>
+    <p>${escape(score.disclaimer)}</p>
+    <p>${escape(score.summary)}</p>
+    <p class="note">${escape(score.status_note)}</p>
+    <p class="sub">${escape(score.lifecycle.note)}</p>
+    <div class="route">
+      <article class="owner-card owner-bank">
+        <div class="label">LESSONS BANK</div>
+        <h3>This example quarter</h3>
+        <p>${escape(score.bank)}</p>
+        <p class="sub">Earlier quarters stay in the baseline. A repeat of a closed lesson reopens it, and verifying the revised proof does not erase the repeat.</p>
+      </article>
+      <div class="owners">${owners}</div>
+    </div>
+    <section class="score-group" aria-labelledby="team-heading">
+      <h3 id="team-heading">By owner team</h3>
+      <p>${escape(score.teams.question)}</p>
+      <div class="team-grid">${teams}</div>
+      <p class="sub">${escape(score.teams.note)}</p>
+    </section>
+    ${groups}
+    <section class="systems" aria-labelledby="systems-heading">
+      <h3 id="systems-heading">Example systems mapping</h3>
+      <p>${escape(score.systems.principle)}</p>
+      <p class="sub">${escape(score.systems.disclaimer)}</p>
+      <ul class="clean">${systems}</ul>
+    </section>
+    <div class="baseline">
+      <h3>Example baseline</h3>
+      <p>In the first 30–60 days, build the baseline this way. This example uses ${escape(score.baseline.window)} because those quarters already share the definitions.</p>
+      <ol class="method">${score.baseline.method_steps.map(step => `<li>${escape(step)}</li>`).join("")}</ol>
+      <div class="quarters">${quarters}</div>
+      <h3>Definitions used for this example</h3>
+      <ul class="clean">${score.baseline.definitions.map(item => `<li><strong>${escape(item.term)}</strong> · ${escape(item.means)}</li>`).join("")}</ul>
+      <h3>Example interviews</h3>
+      <ul class="clean">${score.baseline.interviews.map(item => `<li><strong>${escape(item.role)}</strong> · ${escape(item.note)}</li>`).join("")}</ul>
+      <p class="sub">${escape(score.baseline.messy_data)}</p>
+    </div>
+  </section>`;
+}
+
 function render() {
   const timeline = view.picker_stage ? ["Reported", "Evidence", "Routed", "Recovered"] : stages;
-  const index = timeline.indexOf(view.stage);
+  let index = timeline.indexOf(view.stage);
+  if (!view.picker_stage && view.stage === "Closed") index = timeline.indexOf("Measure");
   const verified = view.actions.filter(row => row.state === "Verified").length;
-  app.innerHTML = `<ol class="steps" aria-label="Escalation lifecycle">${timeline.map((stage, i) => `<li class="${i === index ? "current" : i < index ? "past" : ""}" ${i === index ? 'aria-current="step"' : ""}><b>${i + 1}.</b> ${stage}</li>`).join("")}</ol>
-    <div class="metrics"><div class="metric"><span class="label">CUSTOMER</span><strong>${view.recovered ? "Recovered" : "Open escalation"}</strong></div>
+  const repeats = view.scorecard ? `<div class="metric"><span class="label">REPEATS</span><strong class="${view.scorecard.repeat_held ? "" : "miss"}">${view.scorecard.repeat_held ? "None" : `${view.scorecard.repeat_count} · missed`}</strong></div>` : "";
+  app.innerHTML = `<ol class="steps" style="--steps:${timeline.length}" aria-label="Escalation lifecycle">${timeline.map((stage, i) => `<li class="${i === index ? "current" : i < index ? "past" : ""}" ${i === index ? 'aria-current="step"' : ""}><b>${i + 1}.</b> ${stage}</li>`).join("")}</ol>
+    <div class="metrics${view.scorecard ? " with-score" : ""}"><div class="metric"><span class="label">CUSTOMER</span><strong>${view.recovered ? "Recovered" : "Open escalation"}</strong></div>
     <div class="metric"><span class="label">LEARNING</span><strong>${view.picker_stage ? "Separate issue" : view.stage === "Closed" ? "Closed" : "Open"}</strong></div>
-    <div class="metric"><span class="label">VERIFIED ACTIONS</span><strong>${verified} / ${view.actions.length || "—"}</strong></div></div>
+    <div class="metric"><span class="label">VERIFIED ACTIONS</span><strong>${verified} / ${view.actions.length || "—"}</strong></div>${repeats}</div>
     <div class="layout"><div class="stack" id="workflow">${engagement()}${learning()}${recurrenceReview()}</div>
-    <aside class="stack">${executive()}${audit()}<div>${button("reset", "Restart practice case")}</div></aside></div>`;
+    <aside class="stack">${executive()}${audit()}<div>${button("reset", "Restart practice case")}</div></aside></div>
+    ${view.scorecard ? scorecardPanel(view.scorecard) : ""}`;
   app.setAttribute("aria-busy", "false");
 }
 
@@ -196,10 +317,10 @@ async function request(command, id) {
     if (command) {
       const next = app.querySelector("#workflow button.primary, #workflow button[data-command=verify]");
       next?.focus({preventScroll: true});
-      notice.textContent = view.audit.at(-1)?.summary || "Practice case restarted.";
+      showNotice(view.audit.at(-1)?.summary || "Practice case restarted.");
     }
   } catch (error) {
-    notice.textContent = error.message;
+    showNotice(error.message);
   } finally {
     app.setAttribute("aria-busy", "false");
     pending = false;
@@ -213,7 +334,7 @@ app.addEventListener("click", event => {
   if (source) {
     const evidence = view.evidence[source];
     if (!evidence) {
-      notice.textContent = "This evidence is unavailable in the current case.";
+      showNotice("This evidence is unavailable in the current case.");
       return;
     }
     const [title, observation, url] = evidence;
