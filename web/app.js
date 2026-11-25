@@ -4,6 +4,8 @@ const dialog = document.querySelector("#source-dialog");
 const stages = ["Engage", "Coordinate", "Learn", "Verify", "Closed", "Measure"];
 const ownerClass = {
   "Support": "owner-sup",
+  "Customer Success": "owner-cs",
+  "Technical Account Managers (including Strategic TAMs)": "owner-tam",
   "Solutions Architects": "owner-sa",
   "Data center / hardware operations": "owner-dc",
   "Product management": "owner-docs",
@@ -277,8 +279,8 @@ function scorecardPanel(score) {
       <div class="quarters">${quarters}</div>
       <h3>Definitions used for this example</h3>
       <ul class="clean">${score.baseline.definitions.map(item => `<li><strong>${escape(item.term)}</strong> · ${escape(item.means)}</li>`).join("")}</ul>
-      <h3>Example interviews</h3>
-      <ul class="clean">${score.baseline.interviews.map(item => `<li><strong>${escape(item.role)}</strong> · ${escape(item.note)}</li>`).join("")}</ul>
+      <h3>Example conversations</h3>
+      <ul class="clean">${score.baseline.conversations.map(item => `<li><strong>${escape(item.role)}</strong> · ${escape(item.note)}</li>`).join("")}</ul>
       <p class="sub">${escape(score.baseline.messy_data)}</p>
     </div>
   </section>`;

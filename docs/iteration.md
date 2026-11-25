@@ -24,4 +24,4 @@ python3 workflow_eval.py --report /tmp/escalation-scorecard.json
 
 The three new cases are synthetic regression examples written around these findings. The results measure the workflow rules and evidence references. A future evaluation can add independently reviewed cases to measure behavior on unfamiliar inputs. The demo records the review decision without scheduling a live review.
 
-[Live demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/) · [Rehearsal guide](demo-guide.md) · [Evaluation notes](evaluation.md)
+[Live demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/) · [Demo walkthrough](demo-guide.md) · [Evaluation notes](evaluation.md)

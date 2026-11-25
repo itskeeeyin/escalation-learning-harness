@@ -1,6 +1,6 @@
 # Measuring an escalation manager's influence
 
-The job is not finished when the customer is recovered. A verified lesson has to reach the team that can stop the same problem, and the next quarter has to show whether that held.
+Recovery is not the end of the case. A verified lesson has to reach the team that can stop the same problem, and the next quarter has to show whether that held.
 
 This page is the method. The figures in the [practice demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/) are a worked example built from synthetic tickets. They are not a report of live escalations, and they are not a personal track record.
 
@@ -30,15 +30,21 @@ Each lesson is routed to one owner team:
 | Owner team | What "done" looks like | Where that team accepts it, in the example mapping |
 | --- | --- | --- |
 | Support | Training closes an expertise gap, and a runbook is published | Zendesk |
+| Customer Success | Account health or playbook update, outreach to affected customers, and a renewal-risk note | CRM success-plan task. The example is Salesforce |
+| Technical Account Managers, including strategic TAMs | Customer-specific runbook or architecture review, a check across their accounts, and a QBR follow-up | CRM success-plan task, linked to the account and any open renewal. The example is Salesforce |
 | Solutions Architects | A solution pattern the account team can apply on the next design | Jira |
 | Data center / hardware operations | A check or procedure so the same hardware fault is caught before customers see it | Jira |
 | Product management | The warning, the screen, or the guide is clear enough that customers do the safe thing | Jira |
 | Field / professional services engineers | A tool or check solves the issue without an escalation | Jira |
 | Engineering | A defect is fixed, or the component changes so the issue cannot recur | Jira |
 
-The practice case routes four lessons: a discard-path defect to Engineering, a decision-tree runbook to Support, and a warning plus a guide to Product management. It does not add a field tool, a solution-architect pattern, or a hardware check. The example quarter includes those, and the scorecard marks them as example quarter rather than this case.
+The practice case routes four lessons: a discard-path defect to Engineering, a decision-tree runbook to Support, and a warning plus a guide to Product management. It does not add a field tool, a solution-architect pattern, a hardware check, a Customer Success playbook, or a TAM review. The example quarter includes those, and the scorecard marks them as example quarter rather than this case.
 
-Three other follow-ups stay on the case and are not a second copy of the lesson. Customer Success records the customer's acceptance. Operations carries the measurement. Executive leadership signs the residual risk. The learning record cannot close until those are verified.
+For Customer Success, implemented means the account health or playbook is updated, affected customers have been contacted, and a renewal-risk note is on the account. Verified means the CSM lead has signed off.
+
+For technical account managers, including strategic TAMs, implemented means a customer-specific runbook or architecture review is done, a proactive check has run across their accounts, and the QBR follow-up is recorded. Verified means the TAM manager has signed off. Strategic accounts use the same kind of record.
+
+On this practice case, three follow-ups stay beside the lessons. Customer Success records the customer's acceptance of the rollout. Operations carries the measurement. Executive leadership signs the residual risk. Those three are not a second copy of a lesson. The learning record cannot close until they are verified. Customer Success lessons about account health, and TAM lessons about the book of accounts, are in the example quarter.
 
 A later case with the same confirmed mechanism and the same product surface is a repeat. The lesson reopens. Verifying the revised proof does not erase the repeat. The target for repeats on closed lessons is zero.
 
@@ -69,15 +75,15 @@ The same quarter is also read **by owner team**: acceptance rate, time to accept
 - Runbook answers cited correctly. On this case, every cited source has to be an evidence id on the decision record.
 - Human approval on every action. An agent may draft. A person approves the customer update, the plan, and each verification.
 
-## The baseline, in the first 30–60 days
+## How to establish a baseline
 
 The first 30–60 days build the baseline, before any number is treated as a result.
 
-I read the last two to four quarters of ticket and escalation history: escalation rate, repeat rate by cause, time to resolve, which lessons and defects are still open, and the customer signal. I also talk with support engineers, the account team, engineering leads, and a few customers. The tickets say what was tagged. The conversations say which tags people trust and which updates customers actually remember.
+Read the last two to four quarters of ticket and escalation history: escalation rate, repeat rate by cause, time to resolve, which lessons and defects are still open, and the customer signal. Talk with support engineers, the account team, engineering leads, and a few customers. The tickets say what was tagged. The conversations say which tags people trust and which updates customers actually remember.
 
-When the history is messy, we write the definitions down. What counts as an escalation. What counts as a repeat. What the first honest update is. What "routed" means. We tag every new case that way from day one. The older quarters stay as context. The first full quarter under those definitions is the baseline.
+When the history is messy, write the definitions down. What counts as an escalation. What counts as a repeat. What the first honest update is. What "routed" means. Tag every new case that way from day one. The older quarters stay as context. The first full quarter under those definitions is the baseline.
 
-The practice demo is the clean case. Its three earlier example quarters already share those definitions, so their average is the baseline, and the practice case sits in the example quarter after them. The baseline panel in the demo lists the quarters, the definitions, and four example interviews. The interviews are fictional. The customer in them is the Example Privacy Team from the practice case.
+The demo is the clean case. Its three earlier example quarters already share those definitions, so their average is the baseline, and the practice case sits in the example quarter after them. The baseline panel lists the quarters, the definitions, and four example conversations. The notes are fictional. The customer in them is the Example Privacy Team from the practice case.
 
 ## Read it from the tools already in use
 
@@ -94,6 +100,7 @@ The scorecard does not need a new system of record. [systems-mapping.example.jso
 | Required links | Jira issue links | Ticket, owner-team record, and account. Accepted is not counted without the link back |
 | Recurrence flag | Jira checkbox | The repeat that reopens the lesson |
 | Account context | Salesforce | Which account the ticket belongs to |
+| Success plan | Salesforce, as the example CRM | The task Customer Success or a TAM accepts: health or playbook, outreach, renewal risk, account review, and QBR follow-up. The CSM lead or TAM manager is the verifier |
 | Public incident | Statuspage | Only when the escalation is also public. This practice case is not |
 | Scorecard | A spreadsheet or BI tool | A view over the lesson rows. Not a new system of record |
 
@@ -107,19 +114,11 @@ On the Measure step, after the learning record closes, the scorecard is calculat
 
 The hosted replay still keeps that record in the browser tab. It does not ask for an account or an API key.
 
-## How I'd talk about this in an interview
+## How to read the scorecard
 
-The figures in this demo are a worked example. I would treat them that way in the room.
+Read each metric as four things: the baseline, the change, how it is measured, and whether it held.
 
-In the first month or two I build a baseline. I read the last two to four quarters of tickets, and I talk with support engineers, the account team, engineering leads, and a few customers. I want the escalation rate, the repeat rate by cause, how long the first honest update takes, which lessons and defects are still open, and what customers felt.
-
-When the history is messy, we write the definitions down and tag every new case the same way from day one. The first full quarter under those definitions becomes the baseline.
-
-From then on, a verified lesson has one owner team, and that team accepts it in the system they already use, with a link back. Support publishes training and a runbook. Solutions architects leave a pattern the account team can reuse. Data center and hardware operations add the check that catches the fault early. Product management fixes the warning or the guide. Field and professional services engineers get a tool or a check that solves it without an escalation. Engineering ships a fix or changes the component so the issue cannot recur. The scorecard reads the ticket, the lesson, the link, and the recurrence flag they already store.
-
-A person approves the route and the customer wording. If the same confirmed mechanism comes back, that lesson reopens. The target for repeats on closed lessons is zero. Held means 30 days with no recurrence.
-
-Each metric is four things: the baseline, the change, how it is measured, and whether it held. Influence is the work I got finished. Outcome is whether the problem came back. The AI loop counts when the eval floor held, the answers cite their sources, and a person approved every action.
+Influence is the work that got finished. Outcome is whether the problem came back. The AI loop counts when the eval floor held, the answers cite their sources, and a person approved every action. A repeat of a closed lesson reopens it. Held means 30 days with no recurrence. The figures in the demo are a worked example.
 
 ## Planned: lessons become reviewed runbook changes
 

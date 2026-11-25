@@ -6,11 +6,11 @@
 | --- | ---: | --- |
 | Assessment golden cases | 8 | Confirmed discard, unverified missing template, unsupported restore and impact claims, preview approval, re-review after revision, conditional question issue, and unsupported community citation |
 | Learning workflow checks | 7 | Premature learning, draft invalidation, separate recovery and learning closure, recurrence exclusion, routing with insufficient history, action and executive verification, and stale case revisions |
-| Influence scorecard | 9 | Routing and lifecycle dates earned by state, baseline and current-quarter math, per-team acceptance and repeats, a repeat that stays counted after re-verification, the example systems mapping, citation and approval gates, and the separate launch-picker case |
+| Influence scorecard | 10 | Routing and lifecycle dates earned by state, baseline and current-quarter math, per-team acceptance and repeats, Customer Success and technical account manager lessons in the example quarter, a repeat that stays counted after re-verification, the example systems mapping, citation and approval gates, and the separate launch-picker case |
 | Reliability cases | 7 | Malformed HTTP bodies, rejected origins, missing sessions, unknown and stale actions, blocked restore claims with recovery, missing recovery evidence, and malformed incident records |
 | Workflow replay scorecard | 3 | Incomplete proof and resubmission, separate routing for a launch-picker lookalike, and reopening and reclosing after a confirmed repeat |
 
-The commands below are optional maintainer verification from a checkout. The hosted demo is the way to practice the case. CI does not browse the hosted demo, and there is no hosted evaluation panel.
+The commands below are optional maintainer verification from a checkout. The hosted demo is how to walk the case. CI does not browse the hosted demo, and there is no hosted evaluation panel.
 
 ```sh
 python3 assessment_check.py --copilot-path .

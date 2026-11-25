@@ -8,7 +8,7 @@ A runnable demo that follows a critical customer escalation from the first repor
 
 The demo replays a fictional assessment-template discard and a separate launch-picker lookalike. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
 
-## Practice the case
+## Walk the case
 
 1. **Engage.** Open the customer report. Run triage, inspect the discard event and rollout impact, then confirm P2. The severity rubric is fictional.
 2. **Coordinate.** Review the executive brief and customer draft. Try the unsupported restore claim to see the approval block. Approve supported wording, revise it, and watch the preview lock again until the new version is approved.
@@ -18,7 +18,7 @@ The demo replays a fictional assessment-template discard and a separate launch-p
 6. **Review recurrence.** Load both reports after closure. Keep the filter issue separate, then reopen preventive work for a confirmed repeat. Verify revised Engineering proof and executive sign-off again.
 7. **Measure.** Read the influence scorecard. It compares an example baseline with this practice quarter, including acceptance, implementation, verification, and repeats for each owner team. Confirming the repeat moves the closed-lesson target off zero, and verifying the revised proof does not erase it. **Export JSON** saves the decision record, including the lesson lifecycle and where it was routed.
 
-[Open a screenshot of the live demo](docs/images/demo-preview.png) · [Read the rehearsal guide](docs/demo-guide.md)
+[Open a screenshot of the live demo](docs/images/demo-preview.png) · [Read the demo walkthrough](docs/demo-guide.md)
 
 ## What each team owns
 
@@ -36,9 +36,9 @@ The escalation manager owns the case, confirms priority and recovery, approves t
 
 ## How influence is measured
 
-![A lesson moves from created to held, and is routed to one of six owner teams. The scorecard compares a baseline with what changed.](docs/images/measuring-influence.svg)
+![A lesson moves from created to held, and is routed to one of eight owner teams. The scorecard compares a baseline with what changed.](docs/images/measuring-influence.svg)
 
-After the learning record closes, the Measure step opens an influence scorecard. Four of the follow-ups are lessons on this case: Engineering, Support, and Product management. Solutions architects, data center and hardware operations, and field engineers appear in the example quarter so those teams are visible. Customer Success, Operations, and executive sign-off stay on the case as acceptance, measurement, and residual-risk review. The scorecard compares this example quarter with a baseline from three earlier example quarters, and reads each team for acceptance, time to accept, time to implement, verified share, and repeats. Every figure is synthetic. A repeat reopens the lesson, and the repeat still counts after the revised proof is verified.
+After the learning record closes, the Measure step opens an influence scorecard. Four of the follow-ups are lessons on this case: Engineering, Support, and Product management. Solutions architects, data center and hardware operations, field engineers, Customer Success, and technical account managers appear in the example quarter so those teams are visible. On this case, Customer Success, Operations, and executive sign-off stay as acceptance, measurement, and residual-risk review. The scorecard compares this example quarter with a baseline from three earlier example quarters, and reads each team for acceptance, time to accept, time to implement, verified share, and repeats. Every figure is synthetic. A repeat reopens the lesson, and the repeat still counts after the revised proof is verified.
 
 [How influence is measured](docs/measuring-influence.md) covers the lifecycle, the routing, the three metric groups, the 30–60 day baseline, and an [example systems mapping](systems-mapping.example.json) for reading the same fields from tools an organization already uses. That mapping names a common stack. It does not name a target organization. A planned handoff of verified lessons into Runbook Copilot is described there and is not built.
 
@@ -50,7 +50,7 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 
 - [What changed and why](docs/iteration.md) compares the first release, review findings, and rerun results.
 - [Design notes](docs/design.md) describe inputs, outputs, code structure, and proposed production work.
-- [Rehearsal guide](docs/demo-guide.md) includes the main walkthrough and what to inspect at each decision.
+- [Demo walkthrough](docs/demo-guide.md) includes the main path and what to inspect at each decision.
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
 - [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
 
