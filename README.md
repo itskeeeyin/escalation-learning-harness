@@ -40,6 +40,8 @@ The escalation manager owns the case, confirms priority and recovery, approves t
 
 After the learning record closes, the Measure step opens an influence scorecard. Four of the follow-ups are lessons on this case: Engineering, Support, and Product management. Solutions architects, data center and hardware operations, field engineers, Customer Success, and technical account managers appear in the example quarter so those teams are visible. On this case, Customer Success, Operations, and executive sign-off stay as acceptance, measurement, and residual-risk review. The scorecard compares this example quarter with a baseline from three earlier example quarters, and reads each team for acceptance, time to accept, time to implement, verified share, and repeats. Every figure is synthetic. A repeat reopens the lesson, and the repeat still counts after the revised proof is verified.
 
+The same example quarter can be read as lesson velocity: how long a verified lesson takes to become a measured customer outcome, which open lessons are worth the effort, and how that wait differs by owner team. The charts are example data. [Lesson velocity](docs/lesson-velocity.md) is the write-up. Regenerate the images with `python3 scripts/make_charts.py` after `python3 -m pip install -r requirements-dev.txt`.
+
 [How influence is measured](docs/measuring-influence.md) covers the lifecycle, the routing, the three metric groups, the 30–60 day baseline, and an [example systems mapping](systems-mapping.example.json) for reading the same fields from tools an organization already uses. That mapping names a common stack. It does not name a target organization. A planned handoff of verified lessons into Runbook Copilot is described there and is not built.
 
 ## Benefits and boundaries
@@ -66,12 +68,14 @@ Nothing in that path signs in to a company instance. CI uses the fixtures only. 
 
 These commands are optional. They check the fixtures on a machine that already has the repository. They are not required to use the hosted case.
 
-GitHub Actions runs the three Python checks below, then compares the generated browser replay with the Python scorecard. See the [workflow](.github/workflows/evals.yml). That comparison is maintainer verification. It is not a hosted evaluation panel. A local server is also optional: from a checkout, `python3 serve.py` listens on [127.0.0.1:8796](http://127.0.0.1:8796). Python 3.11 or newer and the standard library are enough. Node is needed only for the replay comparison. If that port is in use, pass `--port 8797`.
+GitHub Actions runs the three Python checks below, installs the optional chart dependency, builds the lesson-velocity charts, then compares the generated browser replay with the Python scorecard. See the [workflow](.github/workflows/evals.yml). That comparison is maintainer verification. It is not a hosted evaluation panel. A local server is also optional: from a checkout, `python3 serve.py` listens on [127.0.0.1:8796](http://127.0.0.1:8796). Python 3.11 or newer and the standard library are enough for the demo and the checks above. matplotlib is an optional dependency for regenerating the lesson-velocity charts (`requirements-dev.txt`). Without it, the chart test skips and the other checks still run. Node is needed only for the replay comparison. If that port is in use, pass `--port 8797`.
 
 ```sh
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
 python3 workflow_eval.py
+python3 -m pip install -r requirements-dev.txt
+python3 scripts/make_charts.py
 ```
 
 ## Prior work and license

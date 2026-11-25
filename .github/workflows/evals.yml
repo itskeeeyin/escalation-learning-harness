@@ -8,8 +8,12 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
+      - run: python -m pip install -r requirements-dev.txt
       - run: python assessment_check.py --copilot-path .
       - run: python -m unittest -v
+      - run: |
+          python scripts/make_charts.py --out "$RUNNER_TEMP/lesson-velocity-charts"
+          grep -q "EXAMPLE DATA" "$RUNNER_TEMP/lesson-velocity-charts"/*.svg
       - run: |
           python workflow_eval.py --report "$RUNNER_TEMP/workflow-scorecard.json"
           python build_demo.py

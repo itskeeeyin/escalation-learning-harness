@@ -38,6 +38,7 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | [serve.py](../serve.py) | Local HTTP interface and in-memory browser sessions |
 | [web/](../web/) | Replay UI, evidence viewer, executive brief, influence scorecard, and JSON export |
 | [measurement.py](../measurement.py), [measurement.json](../measurement.json) | Example baseline, lesson lifecycle, routing, and scorecard math |
+| [scripts/make_charts.py](../scripts/make_charts.py), [examples/lesson-velocity.example.json](../examples/lesson-velocity.example.json) | Example lesson-velocity charts: swimlanes, impact versus effort, and days to impact by team. See [lesson velocity](lesson-velocity.md). |
 | [systems-mapping.example.json](../systems-mapping.example.json) | Example of reading the same fields from tools an organization already uses. Not a live connection, and not a named company |
 | [assessment_golden.json](../assessment_golden.json), [test_harness.py](../test_harness.py), and [test_reliability.py](../test_reliability.py) | Golden assessment scenarios, workflow guards, and local HTTP failure/recovery cases |
 | [workflow_cases.json](../workflow_cases.json) and [workflow_eval.py](../workflow_eval.py) | Replay scorecard for incomplete proof, separate routing, and reopening after a confirmed repeat |

@@ -1,6 +1,6 @@
 # Measuring an escalation manager's influence
 
-Recovery is not the end of the case. A verified lesson has to reach the team that can stop the same problem, and the next quarter has to show whether that held.
+Recovery is not the end of the case. A verified lesson has to reach the team that can stop the same problem, and the next quarter has to show whether that held. How long that takes is [lesson velocity](lesson-velocity.md).
 
 This page is the method. The figures in the [practice demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/) are a worked example built from synthetic tickets. They are not a report of live escalations, and they are not a personal track record.
 
@@ -119,6 +119,26 @@ The hosted replay still keeps that record in the browser tab. It does not ask fo
 Read each metric as four things: the baseline, the change, how it is measured, and whether it held.
 
 Influence is the work that got finished. Outcome is whether the problem came back. The AI loop counts when the eval floor held, the answers cite their sources, and a person approved every action. A repeat of a closed lesson reopens it. Held means 30 days with no recurrence. The figures in the demo are a worked example.
+
+## From a verified lesson to measured impact
+
+A verified finding still has to be accepted, implemented, and show up for the customer. The scorecard reads whether that happened. Lesson velocity reads how long it took, and which lessons are still waiting.
+
+The finish line is a measured change: fewer repeat escalations, a faster time to resolve, or a risk removed from a renewal. [Lesson velocity](lesson-velocity.md) is the method for that wait. It covers why some lessons move in a few weeks, how to rank the open ones by cost of delay, and a monthly review for the ones that stall.
+
+The three charts are example data from [lesson-velocity.example.json](../examples/lesson-velocity.example.json). They are not the practice case, they are not a report of live escalations, and they are not results from any company. Regenerate them with `python3 scripts/make_charts.py`.
+
+**Swimlanes.** One row per lesson, from a verified finding through acceptance, implementation, and measured impact. Open rows name the blocker.
+
+![Example swimlanes. Each lesson runs from verification to acceptance, implementation, and measured impact. Open rows name the blocker. Example data.](images/lesson-velocity-swimlanes.svg)
+
+**Impact and effort.** Bubble size is how long the lesson has sat. The open, high-impact, low-effort lessons are the ones to push first.
+
+![Example lessons by effort and customer impact. Bubble size is age in the backlog. Example data.](images/lesson-impact-effort-quadrant.svg)
+
+**Days to impact by team.** Each dot is a synthetic lesson. Process lessons land sooner than code, roadmap, and hardware lessons.
+
+![Example days from a verified lesson to measured impact, for each owner team. Example data.](images/lesson-days-to-impact-by-team.svg)
 
 ## Planned: lessons become reviewed runbook changes
 
