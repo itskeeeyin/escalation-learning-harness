@@ -2,7 +2,7 @@
 
 ## Purpose
 
-A customer recovery decision answers whether the affected workflow is usable again. A learning closure decision answers whether owners delivered and verified the follow-up. A real rollout would keep both decisions visible, even when work moves to a different team or planning cycle.
+A customer recovery decision answers whether the affected workflow is usable again. That decision closes the incident. A learning closure decision answers whether owners delivered the follow-up and whether it was effective. The linked problem stays open until that second decision. [How this flow maps to ITIL 4 practices](itil-mapping.md) is the term guide for walking a team through the same stages. It is a mapping of this demo, not a certification and not a statement that a team has adopted ITIL.
 
 ## Evidence in and records out
 
@@ -13,7 +13,7 @@ A customer recovery decision answers whether the affected workflow is usable aga
 | Rebuild validation and customer acceptance | Show the reviewer why recovery can be confirmed | Customer recovery decision |
 | RCA review and earlier incident records | Separate the discard event from the prompt design and match the confirmed mechanism on the same product surface | Cause and contributing factor, prior matches, excluded near miss |
 | Team action catalog and simulated completion evidence | Route work, present acceptance criteria, and collect role-played decisions | Assigned and verified actions, executive decision, recurrence review commitment |
-| Session decisions and evidence IDs | Preserve the order of workflow events | Downloadable JSON decision record |
+| Session decisions and evidence IDs | Preserve the order of workflow events | Downloadable JSON decision record, including the incident, problem, known error, known error database entry, change requests, and functional or hierarchical handoffs |
 
 The fictional customer is **Example Privacy Team**, case **ESC-1042**. Support validates the rebuilt template against 18 required questions and both routing paths. The customer accepts the outcome. The review treats the discard as the direct cause of the missing draft and identifies incomplete warning copy as a contributing design factor observed on a test copy. It leaves the scope of previously launched assessments open.
 
@@ -23,7 +23,7 @@ The fictional customer is **Example Privacy Team**, case **ESC-1042**. Support v
 - The reviewer can confirm recovery after seeing Support validation and customer acceptance alongside an approved draft. Recovery unlocks RCA and routing.
 - Routing uses the team catalog. Product and Operations actions in this fixture require at least two prior matches. The general match rule requires a confirmed mechanism and the same product surface.
 - The reviewer approves the proposed plan before the harness assigns its actions. Verification requires an assigned action and loaded completion evidence. Executive verification follows the other team verifications.
-- Closure requires every assigned action to be verified. The 30-day replay reopens Engineering and executive verification only when the same product surface and mechanism are confirmed. Earlier proof remains available under its original evidence ID.
+- Closure requires every assigned action to be verified effective. A corrective or preventive change that is only implemented fails as EffectivenessUnconfirmed, and the problem stays open. The 30-day replay reopens Engineering and executive verification only when the same product surface and mechanism are confirmed. Earlier proof remains available under its original evidence ID. The incident stays closed.
 
 The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.site/) replays the reachable states generated from the Python rules. The browser checks the case revision and keeps the decision record in the current tab. The local Python server checks revisions and holds sessions in memory. In both versions, one person plays the reviewer roles and can export decisions and evidence references as JSON.
 
@@ -34,6 +34,7 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | [command_center/workflow.py](../command_center/workflow.py) | Triage, claim validation, and version-specific approval from the earlier assessment demo |
 | [command_center/cases.json](../command_center/cases.json) | Synthetic intake scenarios and paraphrased public product guidance |
 | [harness.py](../harness.py) | Recovery, recurrence, routing, action verification, and closure rules |
+| [itil.py](../itil.py) | Example impact × urgency matrix, problem phases, known error, change lifecycle, and handoff tags |
 | [scenario.json](../scenario.json) | Synthetic history, recovery evidence, team catalog, and completion evidence |
 | [serve.py](../serve.py) | Local HTTP interface and in-memory browser sessions |
 | [web/](../web/) | Replay UI, evidence viewer, executive brief, influence scorecard, and JSON export |

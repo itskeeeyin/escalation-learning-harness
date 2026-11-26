@@ -9,7 +9,7 @@
       "id": "reject_incomplete_proof",
       "setup": ["follow_up"],
       "steps": [
-        {"command": "verify:ENG", "blocked": "Engineering proof is incomplete", "expect": {"stage": "Verify", "recovered": true, "engineering_proof": "V1"}},
+        {"command": "verify:ENG", "blocked": "Engineering proof is incomplete", "expect": {"stage": "Verify", "recovered": true, "engineering_proof": "V1", "incident_state": "closed", "problem_state": "open", "problem_phase": "error_control", "known_error": true}},
         {"command": "return_proof", "expect": {"engineering_state": "Needs rework"}},
         {"command": "resubmit_proof", "expect": {"engineering_state": "Assigned", "engineering_proof": "V2"}},
         {"command": "verify:ENG", "expect": {"engineering_state": "Verified"}},
@@ -23,7 +23,7 @@
         {"command": "inspect_picker", "expect": {"stage": "Evidence", "executive_sources": ["P1", "P2", "P3"]}},
         {"command": "route_as_discard", "blocked": "support a visibility issue", "expect": {"stage": "Evidence"}},
         {"command": "route_picker", "expect": {"stage": "Routed", "assigned_actions": []}},
-        {"command": "recover_picker", "expect": {"stage": "Recovered", "recovered": true, "executive_sources": ["P1", "P2", "P3", "P4"], "assigned_actions": []}}
+        {"command": "recover_picker", "expect": {"stage": "Recovered", "recovered": true, "executive_sources": ["P1", "P2", "P3", "P4"], "assigned_actions": [], "problem_state": null, "known_error": false}}
       ]
     },
     {
@@ -39,7 +39,7 @@
         {"command": "resubmit_proof", "expect": {"engineering_proof": "V3"}},
         {"command": "verify:ENG", "expect": {"engineering_state": "Verified", "verified_actions": 6}},
         {"command": "verify:EXEC", "expect": {"verified_actions": 7}},
-        {"command": "close", "expect": {"stage": "Closed", "recovered": true, "report_decisions": {"a": "Separate issue", "b": "Confirmed repeat"}}}
+        {"command": "close", "expect": {"stage": "Closed", "recovered": true, "report_decisions": {"a": "Separate issue", "b": "Confirmed repeat"}, "incident_state": "closed", "problem_state": "closed", "known_error": true}}
       ]
     }
   ]

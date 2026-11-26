@@ -33,6 +33,10 @@ def checkpoint(view):
         "verified_actions": sum(row["state"] == "Verified" for row in actions.values()),
         "active_report": review.get("active"),
         "report_decisions": review.get("decisions", {}),
+        "incident_state": (view.get("records") or {}).get("incident", {}).get("state"),
+        "problem_phase": ((view.get("records") or {}).get("problem") or {}).get("phase"),
+        "problem_state": ((view.get("records") or {}).get("problem") or {}).get("state"),
+        "known_error": bool((view.get("records") or {}).get("known_error")),
         "missing_evidence": sorted(refs - view["evidence"].keys()),
     }
 

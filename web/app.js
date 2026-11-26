@@ -71,8 +71,9 @@ function engagement() {
       "The administrator’s report is the starting point. Confirm the event and rollout impact before assigning priority."}</p>
     ${sources(t.confirmed ? ["E1", "E2", "E3", "KB1-F1", "KB1-F2"] : ["E1", "KB2-F1", "KB2-F2", "KB2-F3"])}
     ${!t.confirmed ? `<div class="controls">${button("reveal", "Run triage agent", true)}${button("start_picker", "Try the launch-picker case")}</div>` : `
-      <div class="note sub"><strong>Rebuild owner</strong> · ${escape(t.follow_up.owner)} with Support validation.
+      <div class="note sub"><strong>Rebuild owner</strong> · ${escape(t.follow_up.owner)} with Support validation. Functional escalation to Support.
       <br><strong>Open scope question</strong> · Impact on previously launched assessments.</div>
+      ${t.triage.priority ? `<div class="note"><strong>Example priority</strong> · ${escape(t.triage.priority)} from impact ${escape(t.triage.impact)} × urgency ${escape(t.triage.urgency)}. ${escape(t.triage.priority_basis)} P1 on this matrix is the major-incident cell and is not this case.</div>` : `<div class="warning">${escape(t.triage.failure_message || "Impact or urgency is still unverified.")}</div>`}
       <h3>Customer update · v${currentDraft.version}</h3>
       <p>${escape(currentDraft.claims.map(claim => claim.text).join(" "))}</p>
       <p class="sub">${escape(currentDraft.commitment.text)}</p>
@@ -112,7 +113,8 @@ function actionCard(action) {
   return `<article class="action">
     <div class="row"><span class="label">${escape(action.team)}</span><span class="status ${action.state !== "Verified" ? "pending" : ""}">${escape(action.state)}</span></div>
     <h3>${escape(action.title)}</h3>
-    <p><strong>${escape(action.kind)}</strong> · ${escape(action.owner)} · Due ${escape(action.due)}</p>
+    <p><strong>${escape(action.kind)}</strong> · ${escape(action.escalation === "hierarchical" ? "Hierarchical escalation" : "Functional escalation")} · ${escape(action.owner)} · Due ${escape(action.due)}</p>
+    ${action.change_id ? `<p><strong>${escape(action.change_id)}</strong> · ${escape(String(action.change_state).replaceAll("_", " "))} · effectiveness is required before close</p>` : ""}
     <p><strong>Acceptance</strong> · ${escape(action.criterion)}</p>
     ${sources(action.sources)}
     ${action.proof ? `<p class="proof"><strong>Simulated evidence</strong> · ${escape(action.proof)}</p>` : ""}
@@ -139,6 +141,26 @@ function recurrenceReview() {
   </section>`;
 }
 
+function recordsPanel() {
+  const records = view.records;
+  if (!records || view.picker_stage) return "";
+  const problem = records.problem;
+  const known = records.known_error;
+  const database = records.known_error_database || [];
+  return `<section class="panel" aria-labelledby="records-heading">
+    <div class="label">EXAMPLE RECORDS · HOW THIS FLOW MAPS TO ITIL 4</div>
+    <h2 id="records-heading">Incident closed, problem still open</h2>
+    <p>${escape(records.label)}</p>
+    <p><strong>${escape(records.incident.id)}</strong> · ${escape(records.incident.state)} · ServiceNow ${escape(records.incident.servicenow_number || "")}</p>
+    ${problem ? `<p><strong>${escape(problem.id)}</strong> · ${escape(problem.state)} · ${escape(problem.phase.replaceAll("_", " "))}</p>` :
+      `<p>The problem record opens when recovery closes the incident.</p>`}
+    ${known ? `<p><strong>${escape(known.id)}</strong> · ${escape(known.status.replaceAll("_", " "))} · ${escape(known.workaround)}</p>` : ""}
+    ${database.length ? `<p class="sub"><strong>${escape(database[0].id)}</strong> · ${escape(database[0].title)}</p>` : ""}
+    ${(view.changes || []).length ? `<ul class="clean">${view.changes.map(change => `<li><strong>${escape(change.id)}</strong> · ${escape(change.kind)} · ${escape(change.state.replaceAll("_", " "))}</li>`).join("")}</ul>` : ""}
+    ${(view.handoffs || []).length ? `<p class="sub">${view.handoffs.filter(row => row.escalation === "hierarchical").length} hierarchical and ${view.handoffs.filter(row => row.escalation === "functional").length} functional handoffs in this replay.</p>` : ""}
+  </section>`;
+}
+
 function learning() {
   if (!view.recovered || view.picker_stage) return "";
   const havePlan = view.actions.length > 0;
@@ -159,7 +181,7 @@ function learning() {
         ${view.stage === "Verify" && !outstanding ? button("close", "Close learning loop", true) : ""}
         ${view.stage === "Verify" && outstanding ? `<span class="sub muted">Closure locked · ${outstanding} actions await verification</span>` : ""}
       </div>
-      ${view.stage === "Closed" ? `<p class="success">Learning closed · owners verified all ${view.actions.length} actions. ${escape(view.learning_review.owner)} will review recurrence in ${view.learning_review.interval_days} days. The influence scorecard below is example data from this decision record.</p>` : ""}
+      ${view.stage === "Closed" ? `<p class="success">Learning closed · owners verified that the changes were effective, not only completed. The problem can close. ${escape(view.learning_review.owner)} will review recurrence in ${view.learning_review.interval_days} days. The influence scorecard below is example data from this decision record.</p>` : ""}
     `}
   </section>`;
 }
@@ -176,6 +198,7 @@ function executive() {
 function audit() {
   return `<section class="panel"><div class="header-row"><div><div class="label">DECISION HISTORY</div><h2>Agent & reviewer trace</h2></div>
     ${button("export", "Export JSON")}</div>
+    <p class="sub">The export includes the incident, the problem, the known error, the known error database entry, and the change requests.</p>
     ${view.audit.length ? `<ol class="clean">${[...view.audit].reverse().map(event => `<li class="event">
       <span class="step-id">${String(event.step).padStart(2, "0")}</span><div><strong>${escape(event.actor)}</strong>
       <p>${escape(event.summary)}</p>${sources(event.sources)}</div></li>`).join("")}</ol>` :
@@ -296,7 +319,7 @@ function render() {
     <div class="metrics${view.scorecard ? " with-score" : ""}"><div class="metric"><span class="label">CUSTOMER</span><strong>${view.recovered ? "Recovered" : "Open escalation"}</strong></div>
     <div class="metric"><span class="label">LEARNING</span><strong>${view.picker_stage ? "Separate issue" : view.stage === "Closed" ? "Closed" : "Open"}</strong></div>
     <div class="metric"><span class="label">VERIFIED ACTIONS</span><strong>${verified} / ${view.actions.length || "—"}</strong></div>${repeats}</div>
-    <div class="layout"><div class="stack" id="workflow">${engagement()}${learning()}${recurrenceReview()}</div>
+    <div class="layout"><div class="stack" id="workflow">${engagement()}${recordsPanel()}${learning()}${recurrenceReview()}</div>
     <aside class="stack">${executive()}${audit()}<div>${button("reset", "Restart practice case")}</div></aside></div>
     ${view.scorecard ? scorecardPanel(view.scorecard) : ""}`;
   app.setAttribute("aria-busy", "false");

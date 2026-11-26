@@ -10,7 +10,7 @@ Inbound adapters parse documented API shapes from labeled fixtures. They do not 
 | --- | --- | --- | --- |
 | PagerDuty | In | Webhook `incident.triggered` and log entries | Incident `id`, `status`, `urgency`, `html_url`; v3 webhook `event.event_type` and `event.data`; log entry `type` |
 | Slack | In, and a proposed status post | `conversations.replies` thread | `messages[].ts`, `thread_ts`, `text`; outbound `chat.postMessage` body |
-| ServiceNow | In, and a proposed work note | Table API incident and problem | `sys_id`, `number`, `state`, `priority`, `short_description`; PATCH `work_notes` |
+| ServiceNow | In, and proposed work notes | Table API incident, problem, and change_request | `sys_id`, `number`, `state`, `priority`, `short_description`; incident `problem_id`; problem `rfc`; change `parent`; PATCH `work_notes` |
 | Salesforce | In | SOQL Case query | `Id`, `CaseNumber`, `Subject`, `Status`, `Priority`, `AccountId` |
 | Pylon | In | Issue and account | `data.id`, `number`, `title`, `body_html`, `state`, `account`, `link` |
 | Jira | Out | Create-issue request built from the lesson | REST v3 `fields.project`, `summary`, `issuetype`, description `doc` |
@@ -32,7 +32,7 @@ State values in the fixtures are the vendors' documented defaults (for example S
 
 1. PagerDuty page and timeline.
 2. Slack incident-channel thread.
-3. ServiceNow incident (resolved) and problem (root-cause analysis).
+3. ServiceNow incident (resolved), problem (root-cause analysis), and change request (authorize). The incident points at the problem, and the problem points at the change. The change note stays proposed.
 4. Salesforce Case (closed).
 5. Pylon issue and account.
 6. Lesson for Engineering, Product, and Customer Success, using the titles and acceptance criteria already in `scenario.json`.

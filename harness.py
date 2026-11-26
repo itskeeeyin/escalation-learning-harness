@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from command_center.workflow import FACTS, INCIDENTS, ReviewError, Session
+from itil import change_record, handoff, practice_records
 from measurement import DATE_INPUTS, apply_lifecycle, build_scorecard, lesson_records
 
 DATA = json.loads(Path(__file__).with_name("scenario.json").read_text(encoding="utf-8"))
@@ -28,12 +29,26 @@ def recurrence():
 
 def propose_actions(matches):
     anchor = date.fromisoformat(CASE["rollout"]["launch_at"][:10])
-    return {
-        row["id"]: {**row, "due": (anchor + timedelta(days=row["offset"])).isoformat(),
-                    "state": "Proposed"}
-        for row in DATA["actions"]
-        if len(matches) >= 2 or not row.get("recurrence_required")
-    }
+    actions = {}
+    for row in DATA["actions"]:
+        if len(matches) < 2 and row.get("recurrence_required"):
+            continue
+        governance = row["kind"] == "Governance"
+        actions[row["id"]] = {
+            **row,
+            "due": (anchor + timedelta(days=row["offset"])).isoformat(),
+            "state": "Proposed",
+            "escalation": "hierarchical" if row["team"] == "Executive leadership" else "functional",
+            "change_id": None if governance else f"CHG-{row['id']}-1042",
+            "change_state": None if governance else "proposed",
+        }
+    return actions
+
+
+def set_change_state(actions, state, action_id=None):
+    for key, row in actions.items():
+        if row.get("change_id") and (action_id is None or key == action_id):
+            row["change_state"] = state
 
 
 @dataclass
@@ -49,6 +64,8 @@ class Harness:
     picker_stage: str | None = None
     active_signal: str | None = None
     signal_decisions: dict = field(default_factory=dict)
+    problem_phase: str | None = None
+    known_error: bool = False
 
     def record(self, actor, summary, sources=()):
         self.audit.append({
@@ -121,7 +138,8 @@ class Harness:
             engineering.pop("proof_source", None)
             self.actions["EXEC"]["state"] = "Assigned"
             self.actions["EXEC"]["proof"] = "Decision log EXEC-03 reviews the repeat, accepts the revised safeguard evidence and keeps the recurrence check on the review agenda."
-            self.record("Escalation manager", "Confirmed the repeat and reopened Engineering verification and executive sign-off. The original customer recovery remains confirmed.", [signal["source"]])
+            set_change_state(self.actions, "implemented", "ENG")
+            self.record("Escalation manager", "Confirmed the repeat and reopened Engineering verification and executive sign-off. The original customer recovery remains confirmed. The problem stays in error control until the revised change is verified effective.", [signal["source"]])
         else:
             self.record("Escalation manager", "Kept the visibility issue separate. Draft-discard prevention stays closed.", [signal["source"]])
 
@@ -144,8 +162,8 @@ class Harness:
             self.triage.apply(command, self.triage.version)
             self.stage = "Coordinate"
             summaries = {
-                "reveal": ("Triage agent", "Matched the discard event and rollout impact. Suggested P2.", ["E2","E3","KB1-F2"]),
-                "confirm_priority": ("Escalation manager", "Confirmed P2 and took ownership.", ["E3"]),
+                "reveal": ("Triage agent", "Matched the discard event and rollout impact. Impact 2 and urgency 1 map to P2 on the example matrix.", ["E2","E3","KB1-F2"]),
+                "confirm_priority": ("Escalation manager", "Confirmed P2 from the example impact and urgency matrix and took ownership.", ["E3"]),
                 "approve": ("Escalation manager", f"Approved customer draft v{self.triage.version} for preview.", []),
                 "revise": ("Escalation manager", "Revised draft wording. Prior approval expired.", []),
                 "inject_restore": ("Triage agent", "Proposed a restore claim. Claim check blocked approval.", ["KB1-F1"]),
@@ -161,28 +179,34 @@ class Harness:
             self.require(self.stage == "Coordinate" and self.resolution_available
                          and self.triage.view()["preview"], "Recovery requires validation, acceptance and an approved draft.")
             self.stage = "Learn"
-            self.record("Escalation manager", "Confirmed customer recovery. Prevention work is still open.", ["R1","R2"])
+            self.problem_phase = "problem_identification"
+            self.record("Escalation manager", "Confirmed customer recovery and closed the incident. The linked problem stays open for identification.", ["R1","R2"])
         elif command == "learn":
             self.require(self.stage == "Learn" and not self.actions, "Confirm customer recovery before running the learning agents.")
             self.history = recurrence()
             matches = [case["source"] for case in self.history if case["match"]]
             self.actions = propose_actions(matches)
-            self.record("RCA agent", "Separated the confirmed discard from the contributing prompt design observed in a test copy.", ["E2","R3"])
+            self.problem_phase = "problem_control"
+            self.known_error = True
+            self.record("RCA agent", "Separated the confirmed discard from the contributing prompt design observed in a test copy. The workaround and root cause make this a known error.", ["E2","R3"])
             self.record("Recurrence agent", f"Matched {len(matches)} prior verified discards and excluded the launch-picker report.", [*matches,"H3"])
             self.record("Routing agent", f"Proposed {len(self.actions)} follow-ups with owners, due dates, and acceptance criteria.", ["E2","R3",*matches])
         elif command == "approve_plan":
             self.require(self.stage == "Learn" and self.actions, "Run and review the learning agents first.")
             self.stage = "Verify"
+            self.problem_phase = "error_control"
             for action in self.actions.values():
                 action["state"] = "Assigned"
-            self.record("Escalation manager", "Accepted ownership and verification criteria for the proposed plan.")
+            set_change_state(self.actions, "assessed_authorized")
+            self.record("Escalation manager", "Accepted the plan. Corrective and preventive changes are assessed and authorized. Effectiveness is still unconfirmed.")
         elif command == "load_proof":
             self.require(self.stage == "Verify" and not self.proof_available, "Approve the follow-up plan first.")
             self.proof_available = True
             self.actions["ENG"].update(
                 proof_ready=False, proof_source="V1", proof="PR ENG-17 merged. The submission contains no regression result or customer-path replay."
             )
-            self.record("Verification agent", "Loaded simulated submissions. Engineering supplied a merged PR only.", ["V1"])
+            set_change_state(self.actions, "implemented")
+            self.record("Verification agent", "Loaded simulated submissions. Changes are implemented. Engineering supplied a merged PR only, so effectiveness is unconfirmed.", ["V1"])
         elif command == "verify":
             action = self.actions.get(action_id)
             self.require(self.stage == "Verify" and self.proof_available and action
@@ -192,14 +216,26 @@ class Harness:
             self.require(action_id != "EXEC" or all(row["state"] == "Verified"
                          for key, row in self.actions.items() if key != "EXEC"),
                          "Executive sign-off requires the other teams’ evidence.")
+            if action.get("change_id") and action.get("change_state") != "implemented":
+                raise ReviewError(
+                    "EffectivenessUnconfirmed: verify the change only after it is implemented. Completion alone does not show it worked.",
+                    "EffectivenessUnconfirmed",
+                )
             action["state"] = "Verified"
+            if action.get("change_id"):
+                action["change_state"] = "verified_effective"
             sources = [*action["sources"], action["proof_source"]] if action_id == "ENG" else action["sources"]
-            self.record(action["owner"], f"Verified {action_id}. {action['proof']}", sources)
+            self.record(action["owner"], f"Verified {action_id} effective. {action['proof']}", sources)
         elif command == "close":
             self.require(self.stage == "Verify" and self.actions
                          and all(row["state"] == "Verified" for row in self.actions.values()),
                          "Every assigned action needs owner sign-off before learning can close.")
+            self.require(all(
+                row.get("change_state") in {None, "verified_effective", "closed"}
+                for row in self.actions.values()
+            ), "EffectivenessUnconfirmed: a corrective or preventive change is not verified effective, so the problem record stays open.")
             self.stage = "Closed"
+            set_change_state(self.actions, "closed")
             summary = ("Closed reopened follow-up after verifying the revised safeguard and executive sign-off."
                        if self.actions["ENG"].get("reopened") else
                        "Closed learning and recorded the 30-day recurrence review commitment.")
@@ -235,6 +271,20 @@ class Harness:
             "recovered": stage == "Recovered", "resolution_available": stage == "Recovered",
             "proof_available": False, "actions": [], "history": [], "audit": self.audit,
             "lessons": [], "scorecard": None, "learning_review": None,
+            "records": {
+                "sample": True,
+                "label": "Fictional lookalike. It is not the draft-discard incident or problem.",
+                "incident": {
+                    "record_type": "incident", "id": "INC-1043", "state": "closed" if stage == "Recovered" else "in_progress",
+                    "problem_id": None, "sample": True,
+                },
+                "problem": None, "known_error": None, "known_error_database": [],
+            },
+            "changes": [],
+            "handoffs": [handoff(
+                "launch-picker-support", "functional", "Launch-picker Support",
+                "The corrected filter is a functional escalation to the team that can reproduce it.",
+            )] if stage in {"Routed", "Recovered"} else [],
             "executive": {
                 "status": status, "priority": "Launch-picker review", "next": next_step,
                 "decision": decision, "sources": evidence_ids,
@@ -284,10 +334,16 @@ class Harness:
             "lessons": lessons, "scorecard": scorecard,
             "history": self.history, "audit": self.audit,
             "learning_review": review,
+            "records": practice_records(
+                stage=self.stage, problem_phase=self.problem_phase, known_error=self.known_error,
+                priority_confirmed=self.triage.priority_confirmed,
+            ),
+            "changes": [record for record in (change_record(row) for row in self.actions.values()) if record],
+            "handoffs": self.handoffs(),
             "executive": {
                 "status": "Rollout restored and confirmed by the customer" if recovered else
                           "One rollout at risk" if self.triage.confirmed else "Impact under investigation",
-                "priority": "P2 confirmed" if self.triage.priority_confirmed else "Priority pending",
+                "priority": "P2 confirmed · impact 2 × urgency 1" if self.triage.priority_confirmed else "Priority pending",
                 "next": ("30-day recurrence review" if self.stage == "Closed" else
                          "Review owners and verify preventive actions" if recovered else
                          "Escalation manager update by 2 p.m. Pacific (simulated)" if self.triage.confirmed else
@@ -299,6 +355,28 @@ class Harness:
                 "sources": ["R1","R2"] if recovered else ["E2","E3"] if self.triage.confirmed else ["E1"],
             },
         }
+
+    def handoffs(self):
+        rows = []
+        if self.triage.confirmed:
+            rows.append(handoff(
+                "support-rebuild", "functional", "Support",
+                "Support validates the rebuilt template. That is a functional escalation to the team doing the work.",
+            ))
+            rows.append(handoff(
+                "engineering-investigation", "functional", "Engineering",
+                "The discard safeguard investigation goes to Engineering, the technical owner.",
+            ))
+            rows.append(handoff(
+                "executive-brief", "hierarchical", "Executive leadership",
+                "The stakeholder brief carries impact and the next checkpoint up to management.",
+            ))
+        for row in self.actions.values():
+            rows.append(handoff(
+                f"route-{row['id']}", row["escalation"], row["team"],
+                f"{row['kind']} follow-up: {row['title']}",
+            ))
+        return rows
 
     def measurement(self, evidence):
         if not self.actions:
