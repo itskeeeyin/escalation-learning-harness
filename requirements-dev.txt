@@ -1,0 +1,5 @@
+# Optional developer dependency for scripts/make_charts.py.
+# The demo, the scorecard, and the other checks use the Python standard library only.
+# Install with: python3 -m pip install -r requirements-dev.txt
+matplotlib>=3.8,<4
+numpy>=1.26

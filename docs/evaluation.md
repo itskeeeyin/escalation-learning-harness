@@ -9,6 +9,7 @@
 | Influence scorecard | 10 | Routing and lifecycle dates earned by state, baseline and current-quarter math, per-team acceptance and repeats, Customer Success and technical account manager lessons in the example quarter, a repeat that stays counted after re-verification, the example systems mapping, citation and approval gates, and the separate launch-picker case |
 | Reliability cases | 7 | Malformed HTTP bodies, rejected origins, missing sessions, unknown and stale actions, blocked restore claims with recovery, missing recovery evidence, and malformed incident records |
 | Workflow replay scorecard | 3 | Incomplete proof and resubmission, separate routing for a launch-picker lookalike, and reopening and reclosing after a confirmed repeat |
+| Lesson velocity charts | 4 | The example file uses the scorecard owner teams, cost of delay ranks the worked examples, the generator writes the three charts stamped as example data, and the docs embed those charts. The generator test skips when matplotlib is not installed. CI installs it and builds the charts. |
 
 The commands below are optional maintainer verification from a checkout. The hosted demo is how to walk the case. CI does not browse the hosted demo, and there is no hosted evaluation panel.
 
@@ -16,9 +17,11 @@ The commands below are optional maintainer verification from a checkout. The hos
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
 python3 workflow_eval.py
+python3 -m pip install -r requirements-dev.txt
+python3 scripts/make_charts.py
 ```
 
-The [Actions workflow](../.github/workflows/evals.yml) runs all three checks with Python 3.11 and checks that the generated browser replay matches the Python scorecard. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, proof resubmission, separate routing for the alternate case, and reopening and reclosing after a confirmed repeat. These browser checks are manual and run separately from CI.
+The [Actions workflow](../.github/workflows/evals.yml) runs these checks with Python 3.11, installs the optional chart dependency, builds the lesson-velocity charts, and checks that the generated browser replay matches the Python scorecard. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, proof resubmission, separate routing for the alternate case, and reopening and reclosing after a confirmed repeat. These browser checks are manual and run separately from CI.
 
 Export the per-step decisions, evidence checks, and failures with `python3 workflow_eval.py --report /tmp/escalation-scorecard.json`. The [iteration notes](iteration.md) explain the before and after.
 
