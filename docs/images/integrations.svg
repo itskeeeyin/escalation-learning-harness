@@ -15,7 +15,7 @@ text{font-family:Inter,Arial,sans-serif}.title{font-size:36px;font-weight:700;fi
 <g fill="#1864ab"><text x="58" y="190" class="cardTitle">Inbound adapters</text></g>
 <text x="58" y="222" class="body">PagerDuty incident and timeline</text>
 <text x="58" y="248" class="body">Slack incident-channel thread</text>
-<text x="58" y="274" class="body">ServiceNow incident and problem</text>
+<text x="58" y="274" class="body">ServiceNow incident, problem, change</text>
 <text x="58" y="300" class="body">Salesforce Case</text>
 <text x="58" y="326" class="body">Pylon issue and account</text>
 <text x="58" y="368" class="body">Each payload is marked _sample.</text>
@@ -27,8 +27,8 @@ text{font-family:Inter,Arial,sans-serif}.title{font-size:36px;font-weight:700;fi
 <rect x="430" y="156" width="380" height="360" rx="16" fill="#fff9db" stroke="#f0a000" stroke-width="2"/>
 <g fill="#876000"><text x="448" y="190" class="cardTitle">Harness lesson</text></g>
 <text x="448" y="222" class="body">Map the signals onto one case.</text>
-<text x="448" y="248" class="body">Keep the existing recovery and</text>
-<text x="448" y="274" class="body">verification rules unchanged.</text>
+<text x="448" y="248" class="body">Incident closes at recovery.</text>
+<text x="448" y="274" class="body">Problem and change stay linked.</text>
 <text x="448" y="316" class="body">Product, Engineering, and Customer</text>
 <text x="448" y="342" class="body">Success actions become follow-ups.</text>
 <text x="448" y="384" class="body">A person approves a write before</text>

@@ -8,6 +8,7 @@ import json
 
 from command_center.workflow import ReviewError
 from harness import DATA, Harness, recurrence
+from itil import handoff, priority_from_matrix, ItilFailure
 from integrations.base import ApprovalRequired, approve
 from integrations.jira import JiraAdapter
 from integrations.pagerduty import PagerDutyAdapter
@@ -28,14 +29,9 @@ from agent.failures import (
     WrongEscalationType,
 )
 
-# Practice matrix for this fictional case. Impact 2 and urgency 1 score P2.
-# This is not a certification claim.
-PRIORITY_MATRIX = {
-    (1, 1): "P4", (1, 2): "P3", (1, 3): "P3",
-    (2, 1): "P2", (2, 2): "P2", (2, 3): "P1",
-    (3, 1): "P2", (3, 2): "P1", (3, 3): "P1",
-}
-KNOWN_ERROR_ID = "KE-DRAFT-DISCARD"
+# Same fictional matrix as itil.priority_from_matrix. Impact 2 and urgency 1 score P2.
+KNOWN_ERROR_ID = "KE-1042"
+KEDB_ID = "KEDB-1042"
 FUNCTIONAL = {"support": "functional", "engineering": "functional"}
 HIERARCHICAL = {"executive": "hierarchical"}
 PUBLISHED_STEP_CAP = 40
@@ -113,13 +109,12 @@ class ToolExecutor:
     def classify_priority(self, arguments):
         impact = arguments["impact"]
         urgency = arguments["urgency"]
-        if not isinstance(impact, int) or not isinstance(urgency, int):
-            raise PolicyGate("Impact and urgency are integers on the practice matrix.")
-        priority = PRIORITY_MATRIX.get((impact, urgency))
-        if priority is None:
-            raise PolicyGate("Impact and urgency must be between 1 and 3 on the practice matrix.")
+        try:
+            priority = priority_from_matrix(impact, urgency)
+        except ItilFailure as exc:
+            raise PolicyGate(str(exc)) from exc
         self.priority = {"impact": impact, "urgency": urgency, "priority": priority}
-        return f"Practice matrix maps impact {impact} and urgency {urgency} to {priority}."
+        return f"Example matrix maps impact {impact} and urgency {urgency} to {priority}."
 
     def match_recurrence(self, arguments):
         rows = recurrence()
@@ -136,9 +131,9 @@ class ToolExecutor:
             self.known_error = None
             return "No known error. Fewer than two confirmed draft-discard matches."
         self.known_error = KNOWN_ERROR_ID
-        if KNOWN_ERROR_ID not in self.kedb:
-            self.kedb.append(KNOWN_ERROR_ID)
-        return f"Matched known error {KNOWN_ERROR_ID} for draft discard on template authoring."
+        if KEDB_ID not in self.kedb:
+            self.kedb.append(KEDB_ID)
+        return f"Matched known error {KNOWN_ERROR_ID} and {KEDB_ID} for draft discard on template authoring."
 
     def read_practice_record(self, arguments):
         record_id = arguments["record_id"]
@@ -243,8 +238,12 @@ class ToolExecutor:
             raise WrongEscalationType(
                 f"{team} handoffs on this case are {expected}. Received {kind}."
             )
-        self.handoffs[team] = kind
-        return f"Recorded a {kind} handoff for {team}."
+        try:
+            record = handoff(f"HO-{team}", kind, team, f"Fictional {kind} handoff for {team}.")
+        except ItilFailure as exc:
+            raise WrongEscalationType(str(exc)) from exc
+        self.handoffs[team] = record["escalation"]
+        return f"Recorded a {record['escalation']} handoff for {team}."
 
     def _lesson(self):
         return lesson_from_actions(DATA["actions"])

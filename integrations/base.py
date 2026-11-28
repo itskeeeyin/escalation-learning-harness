@@ -3,6 +3,14 @@
 from dataclasses import dataclass, field
 
 
+class IntegrationFailure(ValueError):
+    """A sample payload or write failed a named check."""
+
+    def __init__(self, failure_class, message):
+        self.failure_class = failure_class
+        super().__init__(f"{failure_class}: {message}")
+
+
 class ApprovalRequired(Exception):
     """A write was attempted before a person approved the proposal."""
 

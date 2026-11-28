@@ -18,6 +18,11 @@
       "display_value": "Example Privacy Team"
     },
     "close_code": "Solution provided",
-    "close_notes": "Customer accepted the rebuilt template. Preventive work is tracked on the problem record."
+    "close_notes": "Customer accepted the rebuilt template. The incident is resolved. The linked problem stays open.",
+    "problem_id": {
+      "link": "https://example.service-now.com/api/now/table/problem/b2c3d4e5f6478990abcdeffedcba98a1",
+      "value": "b2c3d4e5f6478990abcdeffedcba98a1",
+      "display_value": "PRB0001042"
+    }
   }
 }

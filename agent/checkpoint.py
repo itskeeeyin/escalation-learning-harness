@@ -11,6 +11,7 @@ from agent.trace import assert_no_secrets
 HARNESS_FIELDS = (
     "stage", "revision", "actions", "history", "audit", "proof_available",
     "resolution_available", "picker_stage", "active_signal", "signal_decisions",
+    "problem_phase", "known_error",
 )
 TRIAGE_FIELDS = ("confirmed", "priority_confirmed", "version", "claims", "audit")
 CHECKPOINT_FIELDS = (

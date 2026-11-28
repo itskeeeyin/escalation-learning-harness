@@ -5,7 +5,8 @@ import unittest
 from unittest.mock import patch
 
 from harness import DATA
-from integrations.base import ApprovalRequired, approve
+from integrations.base import ApprovalRequired, IntegrationFailure, approve
+from integrations.fixtures import load
 from integrations.jira import JiraAdapter
 from integrations.pagerduty import PagerDutyAdapter
 from integrations.pylon import PylonAdapter
@@ -41,6 +42,19 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(sample["incident"]["customer"], "Example Privacy Team")
         self.assertEqual(sample["problem"]["status"], "root_cause_analysis")
         self.assertEqual(sample["problem"]["links"]["table"], "problem")
+        self.assertEqual(sample["linkage"], {
+            "sample": True,
+            "label": "Example linkage. Incident to problem to change request.",
+            "incident": "INC0011042",
+            "problem": "PRB0001042",
+            "change_request": "CHG0001042",
+        })
+        self.assertEqual(sample["change_request"]["status"], "authorize")
+        self.assertTrue(sample["change_request"]["sample"])
+        broken = {"result": {**load("servicenow_change_request.json")["result"], "state": "99"}}
+        with self.assertRaises(IntegrationFailure) as caught:
+            ServiceNowAdapter().parse_change(broken)
+        self.assertEqual(caught.exception.failure_class, "UnrecognizedServiceNowState")
 
     def test_salesforce_case_query(self):
         cases = SalesforceAdapter().load_sample()
@@ -69,7 +83,8 @@ class AdapterTests(unittest.TestCase):
         jira = JiraAdapter().propose_action_item(lesson, lesson.actions[0], project_key="LEARN")
         slack = SlackAdapter().propose_status(lesson, channel="C0SAMPLE", thread_ts="1.2")
         note = ServiceNowAdapter().propose_work_note(lesson, "abc")
-        for proposal in (jira, slack, note):
+        change = ServiceNowAdapter().propose_change_note(lesson, "chg")
+        for proposal in (jira, slack, note, change):
             self.assertEqual(proposal.state, "proposed")
             adapter = {
                 "jira": JiraAdapter(),

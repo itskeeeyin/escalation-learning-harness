@@ -54,13 +54,14 @@ def cross_tool_replay(actions):
         thread_ts=slack_signal["links"]["thread_ts"],
     ))
     proposals.append(snow.propose_work_note(lesson, servicenow["incident"]["external_id"]))
+    proposals.append(snow.propose_change_note(lesson, servicenow["change_request"]["external_id"]))
     # Show the gate: the first Jira task is approved and dry-run. It is not sent.
     approved = approve(proposals[0])
     dry = jira.execute(approved, dry_run=True)
     steps = [
         {"step": 1, "tool": "pagerduty", "direction": "in", "label": "Page", "detail": pagerduty},
         {"step": 2, "tool": "slack", "direction": "in", "label": "Incident thread", "detail": slack_signal},
-        {"step": 3, "tool": "servicenow", "direction": "in", "label": "Incident and problem", "detail": servicenow},
+        {"step": 3, "tool": "servicenow", "direction": "in", "label": "Incident, problem, and change", "detail": servicenow},
         {"step": 4, "tool": "salesforce", "direction": "in", "label": "Service Cloud case", "detail": salesforce},
         {"step": 5, "tool": "pylon", "direction": "in", "label": "Pylon issue and account", "detail": pylon},
         {"step": 6, "tool": "harness", "direction": "internal", "label": "Lesson", "detail": lesson.as_dict()},

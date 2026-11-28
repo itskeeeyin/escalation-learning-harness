@@ -1,0 +1,26 @@
+{
+  "_sample": true,
+  "_note": "Synthetic Table API change_request. Labeled example linkage from incident INC0011042 to problem PRB0001042. Not from a ServiceNow instance. State -3 is Authorize on the default choice list. Effectiveness is not confirmed in this fixture.",
+  "result": {
+    "sys_id": "c3d4e5f6478990abcdeffedcba98a1b2",
+    "number": "CHG0001042",
+    "short_description": "Warn before irreversible draft discard",
+    "description": "Example corrective change for known error KE-1042. The draft warning must name the draft and the permanent loss of configuration. This sample stops at authorize. A person still has to confirm the change was effective.",
+    "state": "-3",
+    "priority": "2",
+    "impact": "2",
+    "urgency": "2",
+    "type": "normal",
+    "opened_at": "2026-04-03 11:20:00",
+    "parent": {
+      "link": "https://example.service-now.com/api/now/table/problem/b2c3d4e5f6478990abcdeffedcba98a1",
+      "value": "b2c3d4e5f6478990abcdeffedcba98a1",
+      "display_value": "PRB0001042"
+    },
+    "u_incident": {
+      "link": "https://example.service-now.com/api/now/table/incident/a1b2c3d4e5f6478990abcdeffedcba98",
+      "value": "a1b2c3d4e5f6478990abcdeffedcba98",
+      "display_value": "INC0011042"
+    }
+  }
+}

@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from incident_triage import validate_incident
+from itil import matrix_table, priority_from_matrix
 
 DATA = json.loads(Path(__file__).with_name("cases.json").read_text(encoding="utf-8"))
 INCIDENTS = {case["incident_id"]: case for case in DATA["incidents"]}
@@ -25,7 +26,11 @@ REVIEWER = "Demo escalation manager"
 
 
 class ReviewError(ValueError):
-    failure_class = "ReviewError"
+    failure_class = "ReviewRejected"
+
+    def __init__(self, message, failure_class="ReviewRejected"):
+        super().__init__(message)
+        self.failure_class = failure_class
 
 
 def triage(incident_id, available_citation_ids, *, as_of=None):
@@ -39,6 +44,7 @@ def triage(incident_id, available_citation_ids, *, as_of=None):
         if "KB1-F2" in available:
             citations["rebuild"] = ["KB1-F2"]
         severity = "NEEDS_IMPACT_CHECK"
+        impact = urgency = None
         if "E3" in evidence:
             rollout = case["rollout"]
             now = datetime.fromisoformat(as_of or evidence["E3"].timestamp)
@@ -49,14 +55,31 @@ def triage(incident_id, available_citation_ids, *, as_of=None):
                 and rollout["worksheet_available"]
                 and 0 <= hours_until_launch <= 24
             ):
-                severity = "P2"
+                # One blocked workflow is impact 2. A deadline inside 24 hours is urgency 1.
+                impact, urgency = "2", "1"
+                severity = priority_from_matrix(impact, urgency)
             citations["impact_and_deadline"] = ["E3"]
+        priority = {
+            "impact": impact,
+            "urgency": urgency,
+            "priority": severity if impact else None,
+            "priority_basis": (
+                "Example data: impact 2 means one customer workflow is blocked, and urgency 1 "
+                "means the rollout deadline is inside 24 hours. That cell on the example matrix is P2."
+            ) if impact else None,
+            "priority_matrix": matrix_table(),
+            "failure_class": None if impact else "ImpactOrUrgencyUnverified",
+            "failure_message": None if impact else (
+                "Impact or urgency is still unverified, so the example matrix cannot assign a priority."
+            ),
+        }
         return {
             "finding": "confirmed_draft_discard",
             "severity_recommendation": severity,
             "severity_state": "provisional",
             "required_citations": citations,
             "unknowns": ["impact_on_launched_assessments"],
+            **priority,
         }
     if "E6" in evidence:
         citations = {"path_specific_reproduction": ["E6"]}
