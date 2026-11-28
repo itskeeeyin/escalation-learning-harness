@@ -8,6 +8,11 @@
     "description": "Confirmed mechanism draft_discard on surface template_authoring. Two prior incidents match. The warning copy omitted the draft name.",
     "state": "103",
     "priority": "2",
+    "rfc": {
+      "link": "https://example.service-now.com/api/now/table/change_request/c3d4e5f6478990abcdeffedcba98a1b2",
+      "value": "c3d4e5f6478990abcdeffedcba98a1b2",
+      "display_value": "CHG0001042"
+    },
     "impact": "2",
     "urgency": "2",
     "opened_at": "2026-04-02 19:05:00"

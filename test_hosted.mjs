@@ -23,6 +23,19 @@ for (const replay of report.cases) {
     }
     const view = caseView(graph, state);
     assert.equal(view.stage, step.actual.stage, label);
+    if (replay.id === "reopen_and_reclose_confirmed_repeat" && step.command === "close") {
+      assert.equal(view.records.incident.state, "closed", label);
+      assert.equal(view.records.problem.state, "closed", label);
+      assert.equal(view.records.problem.phase, "error_control", label);
+      assert.equal(view.records.known_error.status, "permanent_fix_verified", label);
+      assert.equal(view.records.known_error_database.length, 1, label);
+      assert.ok(view.changes.length >= 6 && view.changes.every(row => row.state === "closed"), label);
+      assert.ok(view.handoffs.some(row => row.escalation === "functional"), label);
+      assert.ok(view.handoffs.some(row => row.escalation === "hierarchical"), label);
+      assert.equal(view.triage.triage.priority, "P2", label);
+      assert.equal(view.triage.triage.impact, "2", label);
+      assert.equal(view.triage.triage.urgency, "1", label);
+    }
     assert.equal(view.recovered, step.actual.recovered, label);
     for (const event of view.audit) {
       for (const source of event.sources) assert.ok(view.evidence[source], `${label} / ${source}`);

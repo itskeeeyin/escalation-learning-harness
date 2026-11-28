@@ -40,7 +40,11 @@
         return rows.map(signalLine).join("");
       }
       if (step.tool === "servicenow") {
-        return `${signalLine(detail.incident)}<p class="sub">Problem ${escape(detail.problem.links.number)} · ${escape(detail.problem.status)}. ${escape(detail.problem.summary)}</p>`;
+        const link = detail.linkage || {};
+        const change = detail.change_request;
+        return `${signalLine(detail.incident)}<p class="sub">Problem ${escape(detail.problem.links.number)} · ${escape(detail.problem.status)}. ${escape(detail.problem.summary)}</p>
+          <p class="sub">Change ${escape(change.links.number)} · ${escape(change.status)}. ${escape(change.summary)}</p>
+          <p class="note">${escape(link.label)} ${escape(link.incident)} → ${escape(link.problem)} → ${escape(link.change_request)}. The change note stays proposed until a person approves it.</p>`;
       }
       if (step.tool === "pylon") {
         return `${signalLine(detail.issue)}<p class="sub">Account ${escape(detail.account.name)} · ${escape(detail.account.domains.join(", "))}</p>`;

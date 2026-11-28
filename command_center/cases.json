@@ -64,14 +64,31 @@
   "demo_rubric": {
     "id": "DEMO-RUBRIC-1",
     "kind": "synthetic_policy",
+    "label": "Fictional example. This matrix is not an organizational standard.",
+    "impact": {
+      "1": "High. Many customers, or the service is unusable.",
+      "2": "Medium. One customer workflow is blocked.",
+      "3": "Low. A workaround is already available and no rollout is blocked."
+    },
+    "urgency": {
+      "1": "High. The customer deadline is inside 24 hours.",
+      "2": "Medium. The customer deadline is inside five days.",
+      "3": "Low. The work can wait for the normal queue."
+    },
+    "matrix": {
+      "impact_1": {"urgency_1": "P1", "urgency_2": "P2", "urgency_3": "P3"},
+      "impact_2": {"urgency_1": "P2", "urgency_2": "P3", "urgency_3": "P4"},
+      "impact_3": {"urgency_1": "P3", "urgency_2": "P4", "urgency_3": "P5"}
+    },
+    "worked_example": "ESC-1042 is impact 2 and urgency 1, which this matrix maps to P2. P1 is the example major-incident cell and is not used here.",
     "rules": [
       {
         "code": "P2",
-        "when": "One customer rollout is blocked within 24 hours and a rebuild path is available."
+        "when": "One customer rollout is blocked within 24 hours and a rebuild path is available. On the example matrix that is impact 2 and urgency 1."
       },
       {
         "code": "NEEDS_IMPACT_CHECK",
-        "when": "Impact or deadline is unverified. Ask for scope and timing before recommending a severity."
+        "when": "Impact or deadline is unverified. Ask for scope and timing before recommending a priority."
       }
     ],
     "severity_owner": "Escalation manager"

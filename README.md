@@ -10,13 +10,13 @@ The demo replays a fictional assessment-template discard and a separate launch-p
 
 ## Walk the case
 
-1. **Engage.** Open the customer report. Run triage, inspect the discard event and rollout impact, then confirm P2. The severity rubric is fictional.
+1. **Engage.** Open the customer report. Run triage, inspect the discard event and rollout impact, then confirm P2. Priority comes from a fictional impact × urgency matrix: one blocked workflow is impact 2, and a deadline inside 24 hours is urgency 1, which maps to P2. See [how this flow maps to ITIL 4 practices](docs/itil-mapping.md).
 2. **Coordinate.** Review the executive brief and customer draft. Try the unsupported restore claim to see the approval block. Approve supported wording, revise it, and watch the preview lock again until the new version is approved.
-3. **Confirm recovery.** Replay Support's rebuild validation and the customer's acceptance. The customer moves to **Recovered** while learning stays **Open**.
-4. **Learn.** Run the RCA, recurrence, and routing stages. Two prior confirmed discard cases match. A similar launch-picker report is excluded because its mechanism is unverified.
-5. **Verify.** Return Engineering’s incomplete submission, replay revised evidence, and verify the actions before executive sign-off.
+3. **Confirm recovery.** Replay Support's rebuild validation and the customer's acceptance. The customer moves to **Recovered**, the incident closes, and the linked problem stays **Open** in problem identification. Learning stays **Open**.
+4. **Learn.** Run the RCA, recurrence, and routing stages. Two prior confirmed discard cases match. A similar launch-picker report is excluded because its mechanism is unverified. Problem control records the workaround and the root cause, so the case becomes a known error with a known error database entry. Handoffs are tagged functional (to a technical team) or hierarchical (up to management).
+5. **Verify.** The problem is in error control. Corrective and preventive actions are change requests. Return Engineering’s incomplete submission, replay revised evidence, and verify that each change was effective before executive sign-off. Completion alone does not close the problem.
 6. **Review recurrence.** Load both reports after closure. Keep the filter issue separate, then reopen preventive work for a confirmed repeat. Verify revised Engineering proof and executive sign-off again.
-7. **Measure.** Read the influence scorecard. It compares an example baseline with this practice quarter, including acceptance, implementation, verification, and repeats for each owner team. Confirming the repeat moves the closed-lesson target off zero, and verifying the revised proof does not erase it. **Export JSON** saves the decision record, including the lesson lifecycle and where it was routed.
+7. **Measure.** Read the influence scorecard. It compares an example baseline with this practice quarter, including acceptance, implementation, verification, and repeats for each owner team. Confirming the repeat moves the closed-lesson target off zero, and verifying the revised proof does not erase it. **Export JSON** saves the decision record, including the incident, the open-then-closed problem, the known error, the known error database entry, the change lifecycle, and where each handoff was routed.
 
 [Open a screenshot of the live demo](docs/images/demo-preview.png) · [Read the demo walkthrough](docs/demo-guide.md)
 
@@ -50,13 +50,14 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 
 - [What changed and why](docs/iteration.md) compares the first release, review findings, and rerun results.
 - [Design notes](docs/design.md) describe inputs, outputs, code structure, and proposed production work.
+- [How this flow maps to ITIL 4 practices](docs/itil-mapping.md) names the incident, problem, known error, change, escalation, and measurement terms the demo is using. It is a mapping, not a certification or an adoption claim.
 - [Demo walkthrough](docs/demo-guide.md) includes the main path and what to inspect at each decision.
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
 - [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
 
 ## Tool adapters
 
-The same fictional case can be replayed from labeled sample payloads for PagerDuty, Slack, ServiceNow, Salesforce, and Pylon. Inbound adapters parse those documented API shapes from fixtures. Live reads are not built yet. Lessons for Engineering, Product, and Customer Success become proposed Jira tasks, a Slack status post, and a ServiceNow work note. Those writes stay proposed until a person approves them. A live send for Jira, Slack, or ServiceNow uses environment variables only after that approval, and the default is a dry run.
+The same fictional case can be replayed from labeled sample payloads for PagerDuty, Slack, ServiceNow, Salesforce, and Pylon. Inbound adapters parse those documented API shapes from fixtures. Live reads are not built yet. Lessons for Engineering, Product, and Customer Success become proposed Jira tasks, a Slack status post, and ServiceNow work notes on the incident and the change request. The sample links the incident to the problem and the problem to the change request. Those writes stay proposed until a person approves them. A live send for Jira, Slack, or ServiceNow uses environment variables only after that approval, and the default is a dry run.
 
 ![Sample tool replay with inbound fixtures, the learning record, and proposed writes](docs/images/integrations.svg)
 
