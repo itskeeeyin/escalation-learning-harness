@@ -3,6 +3,8 @@ import copy
 import json
 from pathlib import Path
 
+from agent.loop import run_scripted
+from agent.score import happy_failures
 from harness import DATA, Harness, ReviewError
 from integrations.replay import cross_tool_replay
 
@@ -81,9 +83,9 @@ def build():
         "Fictional case. Decisions stay in this browser tab.",
     )
     html = html.replace(
-        '<div><a href="/integrations.html">Sample tool replay</a> · '
+        '<div><a href="/integrations.html">Sample tool replay</a> · <a href="/agent-trace.html">Recorded agent trace</a> · '
         '<a href="https://github.com/itskeeeyin/runbook-copilot">',
-        '<div><a href="./integrations.html">Sample tool replay</a> · '
+        '<div><a href="./integrations.html">Sample tool replay</a> · <a href="./agent-trace.html">Recorded agent trace</a> · '
         '<a href="https://github.com/itskeeeyin/escalation-learning-harness">Source code</a> · '
         '<a href="https://github.com/itskeeeyin/escalation-learning-harness/blob/main/docs/demo-guide.md">'
         'Walkthrough</a> · <a href="https://github.com/itskeeeyin/escalation-learning-harness/blob/main/docs/iteration.md">'
@@ -105,7 +107,18 @@ def build():
     (dist / "case.json").write_text(json.dumps(graph, separators=(",", ":")), encoding="utf-8")
     page = (ROOT / "web/integrations.html").read_text(encoding="utf-8")
     page = page.replace('href="/style.css"', 'href="./style.css"')
+    page = page.replace('href="/agent-trace.html"', 'href="./agent-trace.html"')
     (dist / "integrations.html").write_text(page, encoding="utf-8")
+    trace_page = (ROOT / "web/agent-trace.html").read_text(encoding="utf-8")
+    trace_page = trace_page.replace('href="/style.css"', 'href="./style.css"')
+    trace_page = trace_page.replace('href="/integrations.html"', 'href="./integrations.html"')
+    trace_page = trace_page.replace('href="/">', 'href="./index.html">')
+    (dist / "agent-trace.html").write_text(trace_page, encoding="utf-8")
+    trace = run_scripted("happy")
+    failures = happy_failures(trace)
+    trace["outcome"]["trajectory_failures"] = failures
+    trace["outcome"]["trajectory_score"] = "passed" if not failures else "failed"
+    (dist / "agent-trace.json").write_text(json.dumps(trace), encoding="utf-8")
     (dist / "integrations.json").write_text(
         json.dumps(cross_tool_replay(DATA["actions"])), encoding="utf-8"
     )

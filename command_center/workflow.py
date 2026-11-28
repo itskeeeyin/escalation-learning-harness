@@ -26,6 +26,8 @@ REVIEWER = "Demo escalation manager"
 
 
 class ReviewError(ValueError):
+    failure_class = "ReviewRejected"
+
     def __init__(self, message, failure_class="ReviewRejected"):
         super().__init__(message)
         self.failure_class = failure_class

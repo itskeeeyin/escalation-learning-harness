@@ -43,6 +43,7 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 | [assessment_golden.json](../assessment_golden.json), [test_harness.py](../test_harness.py), and [test_reliability.py](../test_reliability.py) | Golden assessment scenarios, workflow guards, and local HTTP failure/recovery cases |
 | [workflow_cases.json](../workflow_cases.json) and [workflow_eval.py](../workflow_eval.py) | Replay scorecard for incomplete proof, separate routing, and reopening after a confirmed repeat |
 | [integrations/](../integrations/) | Offline adapters for PagerDuty, Slack, ServiceNow, Salesforce, Pylon, and Jira. Writes stay proposed until approved. See [integrations.md](integrations.md). |
+| [agent/](../agent/) | Tool loop over the same harness and adapters. CI uses a scripted model. See [agent-harness.md](agent-harness.md). |
 
 ## Proposed production design
 
@@ -57,4 +58,4 @@ The [hosted demo](https://escalation-learning-harness.insightfulfeast.chatgpt.si
 
 A verified training lesson is planned to open a reviewed runbook pull request, with new eval questions for the confirmed mechanism and for the near miss that must stay excluded. [Measuring influence](measuring-influence.md) describes that path. It is not built.
 
-The prototype uses no live model, CRM, messaging, ticketing, or production telemetry. In the hosted demo, a reload preserves progress in the same tab. Restart practice case clears the current replay. The local Python server clears its sessions on restart. The recurrence review is recorded as a commitment, and follow-up actions are simulated. A pilot would first compare the model and rules against human-reviewed cases and agree on who can approve each transition.
+The interactive demo and the hosted case replay do not call a model. A separate recorded trace replays a scripted run. An optional maintainer command can post to an OpenAI-compatible endpoint; CI does not. The repository does not sign in to a CRM, messaging, or ticketing system. In the hosted demo, a reload preserves progress in the same tab. Restart practice case clears the current replay. The local Python server clears its sessions on restart. The recurrence review is recorded as a commitment, and follow-up actions are simulated. A pilot would first compare model choices and rules against human-reviewed cases and agree on who can approve each transition.
