@@ -6,7 +6,11 @@ A runnable demo that follows a critical customer escalation from the first repor
 
 ![Escalation learning loop with evidence inputs, reviewer decisions, verified outputs, and a proposed production feedback loop](docs/images/learning-loop.svg)
 
-The demo replays a fictional assessment-template discard and a separate launch-picker lookalike. The agents run deterministic rules, the evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
+The demo replays a fictional assessment-template discard and a separate launch-picker lookalike. The evidence is synthetic, and a single browser session role-plays the people making decisions. The hosted replay keeps decisions in your browser tab and requires no account or API key.
+
+A second page replays a recorded agent trace; the agent isn't called in the visitor's browser; the interactive case walk is unchanged.
+
+This repository is a verified escalation workflow whose next tool can now be chosen by a model, with approval-gated writes, crash-safe resume, and CI that scores the steps on a scripted model.
 
 ## Walk the case
 
@@ -52,7 +56,8 @@ The replay demonstrates source-linked drafts, explicit recovery and closure deci
 - [Design notes](docs/design.md) describe inputs, outputs, code structure, and proposed production work.
 - [Demo walkthrough](docs/demo-guide.md) includes the main path and what to inspect at each decision.
 - [Evaluation notes](docs/evaluation.md) explain what CI checks and what remains outside the test set.
-- [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness. The demo does not call a model.
+- [Reliability notes](docs/reliability.md) record measured failure and recovery cases from the local harness.
+- [Agent harness](docs/agent-harness.md) describes the tool loop, traces, resume, and the scripted model CI scores. The interactive case walk does not call a model.
 
 ## Tool adapters
 
@@ -72,7 +77,11 @@ GitHub Actions runs the three Python checks below, then compares the generated b
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
 python3 workflow_eval.py
+python3 agent_eval.py
+python3 -m agent --case ESC-1042 --model scripted --trace traces/esc-1042.json
 ```
+
+`agent_eval.py` scores scripted trajectories. The optional Foundry-compatible model command is documented in [agent harness](docs/agent-harness.md) and is not a CI job.
 
 ## Prior work and license
 

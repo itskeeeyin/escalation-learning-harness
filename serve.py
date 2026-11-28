@@ -52,7 +52,15 @@ class Handler(SimpleHTTPRequestHandler):
             self._json(session.view(), token=token)
         elif self.path == "/integrations.json":
             self._json(cross_tool_replay(DATA["actions"]))
-        elif self.path.split("?", 1)[0] in {"/", "/style.css", "/app.js", "/integrations.html"}:
+        elif self.path.split("?", 1)[0] == "/agent-trace.json":
+            from agent.loop import run_scripted
+            from agent.score import happy_failures
+            trace = run_scripted("happy")
+            failures = happy_failures(trace)
+            trace["outcome"]["trajectory_failures"] = failures
+            trace["outcome"]["trajectory_score"] = "passed" if not failures else "failed"
+            self._json(trace)
+        elif self.path.split("?", 1)[0] in {"/", "/style.css", "/app.js", "/integrations.html", "/agent-trace.html"}:
             super().do_GET()
         else:
             self.send_error(404)

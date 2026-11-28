@@ -25,7 +25,7 @@ REVIEWER = "Demo escalation manager"
 
 
 class ReviewError(ValueError):
-    pass
+    failure_class = "ReviewError"
 
 
 def triage(incident_id, available_citation_ids, *, as_of=None):

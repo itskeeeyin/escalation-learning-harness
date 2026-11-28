@@ -9,6 +9,7 @@
 | Influence scorecard | 10 | Routing and lifecycle dates earned by state, baseline and current-quarter math, per-team acceptance and repeats, Customer Success and technical account manager lessons in the example quarter, a repeat that stays counted after re-verification, the example systems mapping, citation and approval gates, and the separate launch-picker case |
 | Reliability cases | 7 | Malformed HTTP bodies, rejected origins, missing sessions, unknown and stale actions, blocked restore claims with recovery, missing recovery evidence, and malformed incident records |
 | Workflow replay scorecard | 3 | Incomplete proof and resubmission, separate routing for a launch-picker lookalike, and reopening and reclosing after a confirmed repeat |
+| Agent trajectories | 7 | Scripted happy path for ESC-1042, write before approval, close before effectiveness, lookalike ESC-1043, resume, corrupt checkpoint, and the published step cap |
 
 The commands below are optional maintainer verification from a checkout. The hosted demo is how to walk the case. CI does not browse the hosted demo, and there is no hosted evaluation panel.
 
@@ -16,14 +17,15 @@ The commands below are optional maintainer verification from a checkout. The hos
 python3 assessment_check.py --copilot-path .
 python3 -m unittest -v
 python3 workflow_eval.py
+python3 agent_eval.py
 ```
 
-The [Actions workflow](../.github/workflows/evals.yml) runs all three checks with Python 3.11 and checks that the generated browser replay matches the Python scorecard. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, proof resubmission, separate routing for the alternate case, and reopening and reclosing after a confirmed repeat. These browser checks are manual and run separately from CI.
+The [Actions workflow](../.github/workflows/evals.yml) runs the assessment, unit, workflow, and agent trajectory checks with Python 3.11 and checks that the generated browser replay matches the Python scorecard. A local browser replay also exercised the blocked claim, draft revision, team verification, closure, JSON export, reload, session isolation, reset, and mobile layout. The hosted browser replay was also checked through blocked claims, proof resubmission, separate routing for the alternate case, and reopening and reclosing after a confirmed repeat. These browser checks are manual and run separately from CI.
 
 Export the per-step decisions, evidence checks, and failures with `python3 workflow_eval.py --report /tmp/escalation-scorecard.json`. The [iteration notes](iteration.md) explain the before and after.
 
 ## What the numbers mean
 
-Passing checks establish the specified behavior for the fixtures. They provide no measurement of live model quality, actual recurrence, customer sentiment, or production reliability. [Reliability notes](reliability.md) separate these deterministic results from live-model evidence. The local harness does not call a model, so token use and model cost are unmeasured. The apparent reduction in the Operations proof is an example of how to write a measurable acceptance criterion. All inputs used to calculate it are synthetic.
+Passing checks establish the specified behavior for the fixtures. They provide no measurement of live model quality, actual recurrence, customer sentiment, or reliability under real traffic. [Reliability notes](reliability.md) separate these deterministic results from a live model call. `agent_eval.py` scores the order of tools on a scripted model whose token cost is zero. It does not call the optional Foundry-compatible client. The apparent reduction in the Operations proof is an example of how to write a measurable acceptance criterion. All inputs used to calculate it are synthetic.
 
 For a production pilot, report verified actions completed on time, median time to customer recovery, time to verified closure, and confirmed repeat escalations per 100 comparable product actions. Compare equal observation windows and have a human reviewer adjudicate suspected repeats.

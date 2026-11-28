@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Recorded agent trace</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top"><div class="shell bar"><div class="brand"><span class="mark" aria-hidden="true">↻</span> Fieldwork <small> / RECORDED TRACE</small></div><span class="practice"><i></i> SCRIPTED REPLAY</span></div></header>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">CUSTOMER OPERATIONS &nbsp; / &nbsp; AGENT TRACE</div>
+      <h1>A recorded practice run</h1>
+      <p>This page replays a trace that was recorded with the scripted model. Nothing here calls a model, and there is no place to send a prompt or a key.</p>
+    </section>
+    <div class="controls">
+      <button type="button" id="step" class="primary">Step</button>
+      <button type="button" id="play">Play</button>
+      <button type="button" id="restart">Restart</button>
+    </div>
+    <div id="app"><p>Loading the recorded trace…</p></div>
+    <footer><span>Fictional sample. Cost on this recording is $0. The interactive case walk is a different page.</span><div><a href="/">Practice case</a> · <a href="/integrations.html">Sample tool replay</a></div></footer>
+  </main>
+  <script>
+    const app = document.querySelector("#app");
+    const escape = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[char]);
+
+    let trace = null;
+    let shown = 0;
+    let timer = null;
+
+    function argsText(step) {
+      const args = step.arguments || {};
+      const keys = Object.keys(args).filter(key => key !== "tool_calls");
+      if (step.kind === "model" && args.tool_calls) {
+        return args.tool_calls.map(call => call.name).join(", ");
+      }
+      if (!keys.length) return "";
+      return keys.map(key => `${key}=${JSON.stringify(args[key])}`).join(" ");
+    }
+
+    function render() {
+      if (!trace) return;
+      const outcome = trace.outcome || {};
+      const steps = trace.steps.slice(0, shown);
+      const score = outcome.trajectory_score || (outcome.completed ? "completed" : outcome.failure_class || "in progress");
+      app.innerHTML = `<div class="metrics">
+          <div class="metric"><span class="label">CASE</span><strong>${escape(trace.case_id)}</strong></div>
+          <div class="metric"><span class="label">BACKEND</span><strong>${escape(trace.backend)}</strong></div>
+          <div class="metric"><span class="label">SCORE</span><strong>${escape(score)}</strong></div>
+          <div class="metric"><span class="label">COST</span><strong>$0</strong></div>
+        </div>
+        <p class="note">${escape(trace.fictional)} Sample flag: ${trace.sample ? "true" : "false"}. Step ${shown} of ${trace.steps.length}.</p>
+        <ol class="clean">${steps.map(step => `<li>
+          <div class="label">${escape(step.kind)} · ${escape(step.name)}</div>
+          <p>${escape(argsText(step))}</p>
+          <p class="sub">${escape(step.result || "")}</p>
+          ${step.failure_class ? `<p class="warning">${escape(step.failure_class)}</p>` : ""}
+          ${step.network === false ? `<p class="sub">network: false</p>` : ""}
+        </li>`).join("")}</ol>
+        ${shown >= trace.steps.length ? `<div class="success"><p>Final score: ${escape(score)}. Cost $0. Priority ${escape(outcome.priority)}. Effectiveness ${escape(outcome.effectiveness)}.</p></div>` : ""}`;
+    }
+
+    function stepOnce() {
+      if (!trace) return;
+      shown = Math.min(trace.steps.length, shown + 1);
+      render();
+      if (shown >= trace.steps.length && timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    document.querySelector("#step").addEventListener("click", stepOnce);
+    document.querySelector("#play").addEventListener("click", () => {
+      if (timer) return;
+      timer = setInterval(stepOnce, 700);
+    });
+    document.querySelector("#restart").addEventListener("click", () => {
+      if (timer) clearInterval(timer);
+      timer = null;
+      shown = 0;
+      render();
+    });
+
+    fetch("./agent-trace.json").then(response => response.json()).then(payload => {
+      trace = payload;
+      render();
+    }).catch(() => {
+      app.innerHTML = "<p>The recorded trace did not load. Open this page from the local server or the built demo.</p>";
+    });
+  </script>
+</body>
+</html>
