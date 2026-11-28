@@ -371,7 +371,7 @@ def tool_specs():
         ), ToolExecutor.approve_write),
         _spec("execute_write", "Dry-run an approved write. The default is dry_run true.", _schema(
             {"proposal_index": {"type": "integer", "description": "Index from the propose tool."},
-             "dry_run": {"type": "boolean", "description": "Defaults to true. The agent does not enable live mode."}},
+             "dry_run": {"type": "boolean", "description": "Defaults to true. A remote send is not enabled."}},
             ["proposal_index"],
         ), ToolExecutor.execute_write),
         _spec("complete_run", "Stop the loop after the case tools have finished.", _schema(

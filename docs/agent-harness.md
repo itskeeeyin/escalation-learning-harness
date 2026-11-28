@@ -43,6 +43,8 @@ CRUSOE_API_KEY=... CRUSOE_MODEL=... python3 -m agent --case ESC-1042 --model fou
 
 Each file stores the case id, the backend name, the step index, redacted messages, harness state, write states, the trace, and totals. Resume loads that file. Truncated or invalid JSON raises `ResumeStateCorrupt` and does not continue.
 
+The same registry is also available as a stdio JSON-RPC process. See [MCP wrapper](mcp.md). That process does not enable live writes.
+
 ## Limits
 
 These scores are fixture results. They do not measure a hosted model, customer impact, or recurrence outside the sample history. The case walk in `index.html` is still the reviewer replay. `measurement.py` is unchanged. The local server still drops sessions on restart.
